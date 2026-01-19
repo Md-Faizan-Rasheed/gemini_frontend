@@ -7,7 +7,10 @@ export default defineConfig({
   server: {
     open: true, // Optional: Opens the app in the browser on start
   },
+    base: '/',   // important for Vercel
+
   // define: {
   //   'process.env.NODE_ENV': JSON.stringify('development') // or 'production'
   // }
 })
+
