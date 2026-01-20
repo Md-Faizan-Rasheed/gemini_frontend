@@ -658,6 +658,34 @@ const StudentSignup = () => {
   });
 
 
+    useEffect(() => {
+    if (companyIdFromUrl) {
+      setFormData((prev) => ({ ...prev, companyId: companyIdFromUrl }));
+    }
+  }, [companyIdFromUrl]);
+
+
+//   /* ===================== AUTO-LOGIN (JWT check) ===================== */
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await api.get("/check-auth");
+        console.log("Auth check response:", res.data);
+        const studentId =  localStorage.getItem("studentId");
+
+        if (res.data.success) {
+            console.log("User already logged in, redirecting to home page.");
+         console.log("Auth check response:", res);
+
+          navigate(`/StudentHomePage/${studentId}`); // Redirect if logged in
+        }
+      } catch (err) {
+        console.warn("Auth check skipped");
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
   // const handleVerifyPhone = async () => {
   //   if (!formData.phoneNumber) {
   //     alert("Please enter phone number first.");
