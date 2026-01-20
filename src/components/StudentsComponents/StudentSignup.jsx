@@ -1,9 +1,624 @@
 
+// import { useState, useEffect } from "react";
+// import { motion } from "framer-motion";
+// import axios from "axios";
+// import { useNavigate, useParams, useLocation } from "react-router-dom";
+// import {useToast} from "../Context/ToastContext.jsx";
+// const StudentSignup = () => {
+//   const location = useLocation();
+//   const queryParams = new URLSearchParams(location.search);
+//   const companyIdFromUrl = queryParams.get("companyId");
+
+//   const navigate = useNavigate();
+//   const { id } = useParams();
+//   const jobId = id;
+//   const [otpVerificationStatus, setOtpVerificationStatus] = useState(false);
+//   const {showToast} = useToast();
+
+
+//   /* ===================== STATE ===================== */
+//   const [formData, setFormData] = useState({
+//     companyId: "64b7f1c2a9e4c8f5d1234567",
+//     phoneNumber: "",
+//     studentName: "",
+//     email: "",
+//     adharNumber: "",
+//     otp: "",
+//     resumeUrl: "",
+//   });
+
+//   const [showOtpInput, setShowOtpInput] = useState(false);
+//   const [loading, setLoading] = useState(false);
+//   const [otpSent, setOtpSent] = useState(false);
+//   const [otpVerified, setOtpVerified] = useState(false);
+//   const [resumeFile, setResumeFile] = useState(null);
+//   const [resumeUploading, setResumeUploading] = useState(false);
+//   const [resumeUploaded, setResumeUploaded] = useState(false);
+
+//   /* ===================== SYNC COMPANY ID ===================== */
+//   useEffect(() => {
+//     if (companyIdFromUrl) {
+//       setFormData((prev) => ({ ...prev, companyId: companyIdFromUrl }));
+//     }
+//   }, [companyIdFromUrl]);
+
+//   /* ===================== AXIOS CONFIG ===================== */
+//   const api = axios.create({
+//     baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
+//     withCredentials: true, // ✅ allows JWT cookies
+//   });
+
+//   /* ===================== HANDLERS ===================== */
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   };
+
+//   // ✅ Send OTP
+//   const handleVerifyPhone = async () => {
+//     if (!formData.phoneNumber) {
+//       showToast("Please enter phone number first.", "warning");
+//       return;
+//     }
+//     setLoading(true);
+//     try {
+//       const res = await api.post("/send-otp", {
+//         phoneNumber: formData.phoneNumber,
+//       });
+
+//       if (res.data.success) {
+//         setShowOtpInput(true);
+//         setOtpSent(true);
+//       } else {
+//         showToast(res.data.message || "Failed to send OTP", "error");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       showToast("Error sending OTP", "error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Verify OTP (but don’t navigate yet)
+//   const handleVerifyOtp = async () => {
+//     if (!formData.otp) {
+//       showToast("Enter OTP before verifying.","warning");
+//       return;
+//     }
+//     setLoading(true);
+//     try {
+//       const res = await api.post("/verify-otp", {
+//         phoneNumber: formData.phoneNumber,
+//         otp: formData.otp,
+//       });
+
+//       if (res.data.success) {
+//         setOtpVerificationStatus(true);
+//         showToast("OTP verified successfully", "success");
+//         setOtpVerified(true);
+
+//         // store studentId temporarily
+//         localStorage.setItem("studentId", res.data.studentId);
+//       } else {
+//         showToast(res.data.message || "Invalid or expired OTP", "error");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       showToast("Error verifying OTP", "error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Resume Upload
+//   const handleResumeChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     const validTypes = [
+//       "application/pdf",
+//       "application/msword",
+//       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//     ];
+
+//     if (!validTypes.includes(file.type)) {
+//       showToast("Upload PDF/DOC/DOCX only", "warning");
+//       e.target.value = "";
+//       return;
+//     }
+
+//     if (file.size > 5 * 1024 * 1024) {
+//       showToast("Max 5MB allowed", "warning");
+//       e.target.value = "";
+//       return;
+//     }
+
+//     setResumeFile(file);
+//     setResumeUploading(true);
+
+//     try {
+//       const data = new FormData();
+//       data.append("resume", file);
+
+//       const response = await axios.post(
+//         "https://vecelbdfastapi-o38rr4nb4-faizs-projects-96be4be2.vercel.app/jobs/upload-resume",
+//         data
+//       );
+
+//       if (response.data?.url) {
+//         setFormData((prev) => ({
+//           ...prev,
+//           resumeUrl: response.data.url,
+//         }));
+//         setResumeUploaded(true);
+//       } else {
+//         showToast("Resume URL not returned", "error");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       showToast("Resume upload failed", "error");
+//       setResumeFile(null);
+//     } finally {
+//       setResumeUploading(false);
+//     }
+//   };
+
+//   /* ===================== SUBMIT FORM ===================== */
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const finalCompanyId = formData.companyId || companyIdFromUrl;
+
+//     // if (!finalCompanyId) {
+//     //   alert("Missing company ID. Please check your link.");
+//     //   return;
+//     // }
+
+//     if (!otpVerified) {
+//       showToast("Please verify OTP first.","warning");
+//       return;
+//     }
+
+//     // if (!formData.resumeUrl) {
+//     //   alert("Please upload your resume first.");
+//     //   return;
+//     // }
+
+//     const submissionData = {
+//       ...formData,
+//       companyId: finalCompanyId,
+//     };
+
+//     setLoading(true);
+//     try {
+//       const res = await api.post("/save-student-details", submissionData);
+
+//       if (res.data.success) {
+//         showToast("Student details saved successfully", "success");
+//         console.log("Student details response:", res.data);
+        
+//         // ✅ Go to home page only now
+//         const studentId = res.data.student_id || localStorage.getItem("studentId");
+//         console.log("Navigating to student home page with ID:", studentId);
+//         navigate(`/StudentHomePage/${studentId}`);
+//       } else {
+//         showToast(res.data.message || "Already registered or save failed","info");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//       showToast("Error submitting student details", "error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   /* ===================== AUTO-LOGIN (JWT check) ===================== */
+//   useEffect(() => {
+//     const checkAuth = async () => {
+//       try {
+//         const res = await api.get("/check-auth");
+//         console.log("Auth check response:", res.data);
+//         const studentId =  localStorage.getItem("studentId");
+
+//         if (res.data.success) {
+//             console.log("User already logged in, redirecting to home page.");
+//          console.log("Auth check response:", res);
+
+//           navigate(`/StudentHomePage/${studentId}`); // Redirect if logged in
+//         }
+//       } catch (err) {
+//         console.warn("Auth check skipped");
+//       }
+//     };
+//     checkAuth();
+//   }, [navigate]);
+
+//   /* ===================== UI ===================== */
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+
+//       <motion.div
+//         initial={{ opacity: 0, y: -30 }}
+//         animate={{ opacity: 1, y: 0 }}
+//         transition={{ duration: 0.6, ease: "easeOut" }}
+//         className="max-w-2xl mx-auto"
+//       >
+//         {/* Header Card */}
+//         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+//           {/* Title Section with Gradient */}
+//           <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-8 py-8">
+//             <motion.div
+//               initial={{ opacity: 0, scale: 0.9 }}
+//               animate={{ opacity: 1, scale: 1 }}
+//               transition={{ duration: 0.5, delay: 0.1 }}
+//               className="text-center"
+//             >
+//               <div className="inline-flex p-3 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+//                 <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+//                 </svg>
+//               </div>
+//               <h2 className="text-4xl font-bold text-white tracking-tight mb-2">
+//                 Student Registration
+//               </h2>
+//               <p className="text-blue-100 text-sm">
+//                 Complete your profile to begin the interview process
+//               </p>
+//             </motion.div>
+//           </div>
+
+//           {/* Form Section */}
+//           <form className="px-8 py-10 space-y-6" onSubmit={handleSubmit}>
+//             {/* Personal Information Section */}
+//             <div className="space-y-6">
+//               <div className="flex items-center gap-3 pb-3 border-b-2 border-gray-200">
+//                 <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
+//                   <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+//                   </svg>
+//                 </div>
+//                 <h3 className="text-lg font-bold text-gray-800">Personal Information</h3>
+//               </div>
+
+//               {/* Student Name Field */}
+//               <motion.div
+//                 initial={{ opacity: 0, x: -20 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ duration: 0.4, delay: 0.2 }}
+//               >
+//                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+//                   Full Name <span className="text-red-500">*</span>
+//                 </label>
+//                 <div className="relative">
+//                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+//                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+//                     </svg>
+//                   </div>
+//                   <input
+//                     type="text"
+//                     name="studentName"
+//                     value={formData.studentName}
+//                     onChange={handleInputChange}
+//                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
+//                     placeholder="Enter your full name"
+//                     required
+//                   />
+//                 </div>
+//               </motion.div>
+
+//               {/* Email Field */}
+//               <motion.div
+//                 initial={{ opacity: 0, x: -20 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ duration: 0.4, delay: 0.25 }}
+//               >
+//                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+//                   Email Address <span className="text-red-500">*</span>
+//                 </label>
+//                 <div className="relative">
+//                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+//                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+//                     </svg>
+//                   </div>
+//                   <input
+//                     type="email"
+//                     name="email"
+//                     value={formData.email}
+//                     onChange={handleInputChange}
+//                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
+//                     placeholder="your.email@example.com"
+//                     required
+//                   />
+//                 </div>
+//               </motion.div>
+
+//               {/* Phone Number Field */}
+//               <motion.div
+//                 initial={{ opacity: 0, x: -20 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ duration: 0.4, delay: 0.3 }}
+//               >
+//                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+//                   Phone Number <span className="text-red-500">*</span>
+//                 </label>
+//                 <div className="flex gap-3">
+//                   <div className="flex-1 relative">
+//                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+//                       <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+//                       </svg>
+//                     </div>
+//                     <input
+//                       type="tel"
+//                       name="phoneNumber"
+//                       value={formData.phoneNumber}
+//                       onChange={handleInputChange}
+//                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
+//                       placeholder="Enter phone number"
+//                       maxLength="10"
+//                       required
+//                     />
+//                   </div>
+//                   <motion.button
+//                     type="button"
+//                     onClick={handleVerifyPhone}
+//                     whileHover={{ scale: 1.05 }}
+//                     whileTap={{ scale: 0.95 }}
+//                     disabled={loading}
+//                     className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+//                   >
+//                     {loading ? (
+//                       <span className="flex items-center gap-2">
+//                         <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+//                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+//                         </svg>
+//                         Sending...
+//                       </span>
+//                     ) : otpSent ? (
+//                       "Resend OTP"
+//                     ) : (
+//                       "Verify"
+//                     )}
+//                   </motion.button>
+//                 </div>
+//               </motion.div>
+
+//               {/* OTP Input Section */}
+//               {showOtpInput && (
+//                 <motion.div
+//                   initial={{ opacity: 0, height: 0 }}
+//                   animate={{ opacity: 1, height: "auto" }}
+//                   transition={{ duration: 0.4, ease: "easeOut" }}
+//                   className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5"
+//                 >
+//                   <div className="flex items-center gap-2 mb-3">
+//                     <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+//                     </svg>
+//                     <label className="block text-sm font-semibold text-blue-700">
+//                       Enter OTP
+//                     </label>
+//                   </div>
+//                   <input
+//                     type="text"
+//                     name="otp"
+//                     value={formData.otp}
+//                     onChange={handleInputChange}
+//                     className="w-full px-4 py-3 border-2 border-blue-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-center text-lg tracking-widest font-semibold"
+//                     placeholder="••••••"
+//                     maxLength="6"
+//                   />
+//                   <motion.button
+//                     type="button"
+//                     onClick={handleVerifyOtp}
+//                     whileHover={{ scale: 1.02 }}
+//                     whileTap={{ scale: 0.98 }}
+//                     disabled={loading}
+//                     className="mt-4 w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+//                   >
+//                     {loading ? (
+//                       <>
+//                         <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+//                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+//                         </svg>
+//                         Verifying...
+//                       </>
+//                     ) : (
+//                       <>
+//                         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+//                         </svg>
+//                         Verify OTP
+//                       </>
+//                     )}
+//                   </motion.button>
+//                   {otpVerificationStatus && (
+//                     <motion.div
+//                       initial={{ opacity: 0, scale: 0.9 }}
+//                       animate={{ opacity: 1, scale: 1 }}
+//                       className="mt-3 flex items-center gap-2 text-blue-700 text-sm font-medium bg-white px-3 py-2 rounded-lg"
+//                     >
+//                       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+//                       </svg>
+//                       OTP Verified Successfully!
+//                     </motion.div>
+//                   )}
+//                 </motion.div>
+//               )}
+
+//               {/* Aadhar Number Field */}
+//               <motion.div
+//                 initial={{ opacity: 0, x: -20 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ duration: 0.4, delay: 0.35 }}
+//               >
+//                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+//                   Aadhar Number (Last 4 digits) <span className="text-red-500">*</span>
+//                 </label>
+//                 <div className="relative">
+//                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+//                     <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+//                     </svg>
+//                   </div>
+//                   <input
+//                     type="text"
+//                     name="adharNumber"
+//                     value={formData.adharNumber}
+//                     onChange={handleInputChange}
+//                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
+//                     placeholder="Enter last 4 digits"
+//                     maxLength="4"
+//                     required
+//                   />
+//                 </div>
+//               </motion.div>
+//             </div>
+
+//             {/* Resume Upload Section */}
+//             {/* <div className="space-y-4 pt-4">
+//               <div className="flex items-center gap-3 pb-3 border-b-2 border-gray-200">
+//                 <div className="p-2 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100">
+//                   <svg className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+//                   </svg>
+//                 </div>
+//                 <h3 className="text-lg font-bold text-gray-800">Resume Upload</h3>
+//               </div>
+
+//               <motion.div
+//                 initial={{ opacity: 0, x: -20 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ duration: 0.4, delay: 0.4 }}
+//               >
+//                 <label className="block text-sm font-semibold text-gray-700 mb-2">
+//                   Upload Resume <span className="text-red-500">*</span>
+//                 </label>
+//                 <div className="relative">
+//                   <input
+//                     type="file"
+//                     id="resume-upload"
+//                     accept=".pdf,.doc,.docx"
+//                     onChange={handleResumeChange}
+//                     className="hidden"
+//                   />
+//                   <label
+//                     htmlFor="resume-upload"
+//                     className={`flex flex-col items-center justify-center w-full px-6 py-8 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
+//                       resumeUploaded
+//                         ? "border-green-400 bg-green-50"
+//                         : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-blue-400"
+//                     }`}
+//                   >
+//                     {resumeUploading ? (
+//                       <div className="text-center">
+//                         <svg className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24">
+//                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+//                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+//                         </svg>
+//                         <p className="text-sm font-semibold text-blue-600">Uploading...</p>
+//                       </div>
+//                     ) : resumeUploaded ? (
+//                       <div className="text-center">
+//                         <svg className="h-12 w-12 text-green-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+//                         </svg>
+//                         <p className="text-sm font-semibold text-green-700 mb-1">Resume Uploaded Successfully!</p>
+//                         <p className="text-xs text-gray-600">{resumeFile?.name}</p>
+//                         <p className="text-xs text-blue-600 mt-2 hover:underline">Click to change</p>
+//                       </div>
+//                     ) : (
+//                       <div className="text-center">
+//                         <svg className="h-12 w-12 text-gray-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+//                         </svg>
+//                         <p className="text-sm font-semibold text-gray-700 mb-1">
+//                           Click to upload or drag and drop
+//                         </p>
+//                         <p className="text-xs text-gray-500">PDF, DOC, DOCX (Max 5MB)</p>
+//                       </div>
+//                     )}
+//                   </label>
+//                 </div>
+//               </motion.div>
+//             </div> */}
+
+//             {/* Submit Button */}
+//             <motion.button
+//               type="submit"
+//               whileHover={{ scale: 1.02 }}
+//               whileTap={{ scale: 0.98 }}
+//               initial={{ opacity: 0, y: 20 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.4, delay: 0.5 }}
+//               className="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-3 group"
+//             >
+//               <span>Submit Application</span>
+//               <svg className="h-6 w-6 group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+//               </svg>
+//             </motion.button>
+
+//               <div className="text-center pt-4 border-t">
+//               <p className="text-sm">
+//                 Already have an account?{" "}
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     navigate(`/StudentSignin`)
+//                   }
+//                   className="text-blue-600 font-semibold"
+//                 >
+//                   Sign in
+//                 </button>
+//               </p>
+//             </div>
+//           </form>
+//         </div>
+
+//         {/* Footer Info */}
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           transition={{ duration: 0.5, delay: 0.6 }}
+//           className="mt-6 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-2xl px-6 py-4"
+//         >
+//           <div className="flex items-start gap-3">
+//             <svg className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+//             </svg>
+//             <div>
+//               <p className="text-sm font-semibold text-gray-800 mb-1">Your Privacy Matters</p>
+//               <p className="text-xs text-gray-600">
+//                 All information provided is encrypted and will only be used for interview purposes. We respect your privacy and handle your data with care.
+//               </p>
+//             </div>
+//           </div>
+//         </motion.div>
+//       </motion.div>
+  
+//     </div>
+//   );
+// };
+
+// export default StudentSignup;
+
+
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {useToast} from "../Context/ToastContext.jsx";
+
 const StudentSignup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -16,7 +631,6 @@ const StudentSignup = () => {
   const {showToast} = useToast();
 
 
-  /* ===================== STATE ===================== */
   const [formData, setFormData] = useState({
     companyId: "64b7f1c2a9e4c8f5d1234567",
     phoneNumber: "",
@@ -29,36 +643,36 @@ const StudentSignup = () => {
 
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
-  const [resumeFile, setResumeFile] = useState(null);
-  const [resumeUploading, setResumeUploading] = useState(false);
-  const [resumeUploaded, setResumeUploaded] = useState(false);
 
-  /* ===================== SYNC COMPANY ID ===================== */
-  useEffect(() => {
-    if (companyIdFromUrl) {
-      setFormData((prev) => ({ ...prev, companyId: companyIdFromUrl }));
-    }
-  }, [companyIdFromUrl]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  /* ===================== AXIOS CONFIG ===================== */
-  const api = axios.create({
+    const api = axios.create({
     baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
     withCredentials: true, // ✅ allows JWT cookies
   });
 
-  /* ===================== HANDLERS ===================== */
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
-  // ✅ Send OTP
-  const handleVerifyPhone = async () => {
+  // const handleVerifyPhone = async () => {
+  //   if (!formData.phoneNumber) {
+  //     alert("Please enter phone number first.");
+  //     return;
+  //   }
+  //   setLoading(true);
+    
+  //   setTimeout(() => {
+  //     setShowOtpInput(true);
+  //     setOtpSent(true);
+  //     setLoading(false);
+  //   }, 1500);
+  // };
+
+    const handleVerifyPhone = async () => {
     if (!formData.phoneNumber) {
       showToast("Please enter phone number first.", "warning");
       return;
@@ -83,91 +697,41 @@ const StudentSignup = () => {
     }
   };
 
-  // ✅ Verify OTP (but don’t navigate yet)
   const handleVerifyOtp = async () => {
     if (!formData.otp) {
-      showToast("Enter OTP before verifying.","warning");
+      alert("Enter OTP before verifying.");
       return;
     }
     setLoading(true);
-    try {
-      const res = await api.post("/verify-otp", {
-        phoneNumber: formData.phoneNumber,
-        otp: formData.otp,
-      });
-
-      if (res.data.success) {
-        setOtpVerificationStatus(true);
-        showToast("OTP verified successfully", "success");
-        setOtpVerified(true);
-
-        // store studentId temporarily
-        localStorage.setItem("studentId", res.data.studentId);
-      } else {
-        showToast(res.data.message || "Invalid or expired OTP", "error");
-      }
-    } catch (err) {
-      console.error(err);
-      showToast("Error verifying OTP", "error");
-    } finally {
+    
+    setTimeout(() => {
+      setOtpVerified(true);
       setLoading(false);
-    }
+    }, 1200);
   };
 
-  // ✅ Resume Upload
-  const handleResumeChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
-    const validTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
+  //   if (!otpVerified) {
+  //     alert("Please verify OTP first.");
+  //     return;
+  //   }
 
-    if (!validTypes.includes(file.type)) {
-      showToast("Upload PDF/DOC/DOCX only", "warning");
-      e.target.value = "";
-      return;
-    }
+  //   setSubmitting(true);
+    
+  //   setTimeout(() => {
+  //     console.log("Form submitted:", formData);
+  //     setSubmitting(false);
+  //     alert("Registration successful!");
+  //   }, 2000);
+  // };
 
-    if (file.size > 5 * 1024 * 1024) {
-      showToast("Max 5MB allowed", "warning");
-      e.target.value = "";
-      return;
-    }
 
-    setResumeFile(file);
-    setResumeUploading(true);
 
-    try {
-      const data = new FormData();
-      data.append("resume", file);
+  //   /* ===================== SUBMIT FORM ===================== */
+  
 
-      const response = await axios.post(
-        "https://vecelbdfastapi-o38rr4nb4-faizs-projects-96be4be2.vercel.app/jobs/upload-resume",
-        data
-      );
-
-      if (response.data?.url) {
-        setFormData((prev) => ({
-          ...prev,
-          resumeUrl: response.data.url,
-        }));
-        setResumeUploaded(true);
-      } else {
-        showToast("Resume URL not returned", "error");
-      }
-    } catch (err) {
-      console.error(err);
-      showToast("Resume upload failed", "error");
-      setResumeFile(null);
-    } finally {
-      setResumeUploading(false);
-    }
-  };
-
-  /* ===================== SUBMIT FORM ===================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -188,6 +752,10 @@ const StudentSignup = () => {
     //   return;
     // }
 
+
+    setSubmitting(true);
+
+
     const submissionData = {
       ...formData,
       companyId: finalCompanyId,
@@ -199,11 +767,14 @@ const StudentSignup = () => {
 
       if (res.data.success) {
         showToast("Student details saved successfully", "success");
+          setSubmitting(false);
+
         console.log("Student details response:", res.data);
         
         // ✅ Go to home page only now
         const studentId = res.data.student_id || localStorage.getItem("studentId");
         console.log("Navigating to student home page with ID:", studentId);
+  
         navigate(`/StudentHomePage/${studentId}`);
       } else {
         showToast(res.data.message || "Already registered or save failed","info");
@@ -216,193 +787,156 @@ const StudentSignup = () => {
     }
   };
 
-  /* ===================== AUTO-LOGIN (JWT check) ===================== */
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await api.get("/check-auth");
-        console.log("Auth check response:", res.data);
-        const studentId =  localStorage.getItem("studentId");
-
-        if (res.data.success) {
-            console.log("User already logged in, redirecting to home page.");
-         console.log("Auth check response:", res);
-
-          navigate(`/StudentHomePage/${studentId}`); // Redirect if logged in
-        }
-      } catch (err) {
-        console.warn("Auth check skipped");
-      }
-    };
-    checkAuth();
-  }, [navigate]);
-
-  /* ===================== UI ===================== */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-6 px-3 sm:py-12 sm:px-6 lg:px-8">
       <motion.div
-        initial={{ opacity: 0, y: -30 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.5 }}
         className="max-w-2xl mx-auto"
       >
-        {/* Header Card */}
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-          {/* Title Section with Gradient */}
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-8 py-8">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl overflow-hidden border border-gray-100">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-4 py-6 sm:px-8 sm:py-8">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.4 }}
               className="text-center"
             >
-              <div className="inline-flex p-3 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <svg className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="inline-flex p-2.5 sm:p-3 rounded-full bg-white/20 backdrop-blur-sm mb-3 sm:mb-4">
+                <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h2 className="text-4xl font-bold text-white tracking-tight mb-2">
+              <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight mb-1.5 sm:mb-2">
                 Student Registration
               </h2>
-              <p className="text-blue-100 text-sm">
+              <p className="text-blue-100 text-xs sm:text-sm px-2">
                 Complete your profile to begin the interview process
               </p>
             </motion.div>
           </div>
 
-          {/* Form Section */}
-          <form className="px-8 py-10 space-y-6" onSubmit={handleSubmit}>
-            {/* Personal Information Section */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 pb-3 border-b-2 border-gray-200">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
-                  <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          {/* Form */}
+          <div className="px-4 py-6 sm:px-8 sm:py-10 space-y-5 sm:space-y-6">
+            {/* Section Header */}
+            <div className="flex items-center gap-2.5 sm:gap-3 pb-2.5 sm:pb-3 border-b-2 border-gray-200">
+              <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-gray-800">Personal Information</h3>
+            </div>
+
+            {/* Full Name */}
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                Full Name <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-gray-800">Personal Information</h3>
+                <input
+                  type="text"
+                  name="studentName"
+                  value={formData.studentName}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
+                  placeholder="Enter your full name"
+                  required
+                />
               </div>
+            </div>
 
-              {/* Student Name Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-              >
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            {/* Email */}
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
+                  placeholder="your.email@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <div className="flex-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                    <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
                   <input
-                    type="text"
-                    name="studentName"
-                    value={formData.studentName}
+                    type="tel"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
-                    placeholder="Enter your full name"
+                    className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
+                    placeholder="Enter phone number"
+                    maxLength="10"
                     required
                   />
                 </div>
-              </motion.div>
-
-              {/* Email Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.25 }}
-              >
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
-                    placeholder="your.email@example.com"
-                    required
-                  />
-                </div>
-              </motion.div>
-
-              {/* Phone Number Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.3 }}
-              >
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <div className="flex gap-3">
-                  <div className="flex-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                <button
+                  type="button"
+                  onClick={handleVerifyPhone}
+                  disabled={loading}
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  {loading ? (
+                    <span className="flex items-center gap-1.5 sm:gap-2">
+                      <svg className="animate-spin h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                    </div>
-                    <input
-                      type="tel"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
-                      placeholder="Enter phone number"
-                      maxLength="10"
-                      required
-                    />
-                  </div>
-                  <motion.button
-                    type="button"
-                    onClick={handleVerifyPhone}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    disabled={loading}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Sending...
-                      </span>
-                    ) : otpSent ? (
-                      "Resend OTP"
-                    ) : (
-                      "Verify"
-                    )}
-                  </motion.button>
-                </div>
-              </motion.div>
+                      Sending...
+                    </span>
+                  ) : otpSent ? (
+                    "Resend OTP"
+                  ) : (
+                    "Verify"
+                  )}
+                </button>
+              </div>
+            </div>
 
-              {/* OTP Input Section */}
+            {/* OTP Section */}
+            <AnimatePresence>
               {showOtpInput && (
                 <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5"
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: "1rem" }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-blue-50 border-2 border-blue-200 rounded-xl sm:rounded-2xl p-4 sm:p-5"
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
+                    <svg className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    <label className="block text-sm font-semibold text-blue-700">
+                    <label className="block text-xs sm:text-sm font-semibold text-blue-700">
                       Enter OTP
                     </label>
                   </div>
@@ -411,21 +945,19 @@ const StudentSignup = () => {
                     name="otp"
                     value={formData.otp}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-blue-300 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-center text-lg tracking-widest font-semibold"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-blue-300 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-center text-base sm:text-lg tracking-widest font-semibold"
                     placeholder="••••••"
                     maxLength="6"
                   />
-                  <motion.button
+                  <button
                     type="button"
                     onClick={handleVerifyOtp}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     disabled={loading}
-                    className="mt-4 w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="mt-3 sm:mt-4 w-full py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>
-                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -433,20 +965,20 @@ const StudentSignup = () => {
                       </>
                     ) : (
                       <>
-                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Verify OTP
                       </>
                     )}
-                  </motion.button>
-                  {otpVerificationStatus && (
+                  </button>
+                  {otpVerified && (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="mt-3 flex items-center gap-2 text-blue-700 text-sm font-medium bg-white px-3 py-2 rounded-lg"
+                      className="mt-3 flex items-center gap-2 text-blue-700 text-xs sm:text-sm font-medium bg-white px-3 py-2 rounded-lg"
                     >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       OTP Verified Successfully!
@@ -454,158 +986,104 @@ const StudentSignup = () => {
                   )}
                 </motion.div>
               )}
+            </AnimatePresence>
 
-              {/* Aadhar Number Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.35 }}
-              >
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Aadhar Number (Last 4 digits) <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    name="adharNumber"
-                    value={formData.adharNumber}
-                    onChange={handleInputChange}
-                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-gray-900"
-                    placeholder="Enter last 4 digits"
-                    maxLength="4"
-                    required
-                  />
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Resume Upload Section */}
-            {/* <div className="space-y-4 pt-4">
-              <div className="flex items-center gap-3 pb-3 border-b-2 border-gray-200">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100">
-                  <svg className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            {/* Aadhar Number */}
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                Aadhar Number (Last 4 digits) <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-gray-800">Resume Upload</h3>
+                <input
+                  type="text"
+                  name="adharNumber"
+                  value={formData.adharNumber}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
+                  placeholder="Enter last 4 digits"
+                  maxLength="4"
+                  required
+                />
               </div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-              >
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Upload Resume <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="resume-upload"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleResumeChange}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="resume-upload"
-                    className={`flex flex-col items-center justify-center w-full px-6 py-8 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 ${
-                      resumeUploaded
-                        ? "border-green-400 bg-green-50"
-                        : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-blue-400"
-                    }`}
-                  >
-                    {resumeUploading ? (
-                      <div className="text-center">
-                        <svg className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <p className="text-sm font-semibold text-blue-600">Uploading...</p>
-                      </div>
-                    ) : resumeUploaded ? (
-                      <div className="text-center">
-                        <svg className="h-12 w-12 text-green-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-sm font-semibold text-green-700 mb-1">Resume Uploaded Successfully!</p>
-                        <p className="text-xs text-gray-600">{resumeFile?.name}</p>
-                        <p className="text-xs text-blue-600 mt-2 hover:underline">Click to change</p>
-                      </div>
-                    ) : (
-                      <div className="text-center">
-                        <svg className="h-12 w-12 text-gray-400 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        <p className="text-sm font-semibold text-gray-700 mb-1">
-                          Click to upload or drag and drop
-                        </p>
-                        <p className="text-xs text-gray-500">PDF, DOC, DOCX (Max 5MB)</p>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </motion.div>
-            </div> */}
+            </div>
 
             {/* Submit Button */}
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-3 group"
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-base sm:text-lg rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 group relative overflow-hidden"
             >
-              <span>Submit Application</span>
-              <svg className="h-6 w-6 group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </motion.button>
+              <AnimatePresence mode="wait">
+                {submitting ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2"
+                  >
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating Account...
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="submit"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2 sm:gap-3"
+                  >
+                    <span>Submit Application</span>
+                    <svg className="h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
 
-              <div className="text-center pt-4 border-t">
-              <p className="text-sm">
+            <div className="text-center pt-3 sm:pt-4 border-t">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Already have an account?{" "}
                 <button
                   type="button"
-                  onClick={() =>
-                    navigate(`/StudentSignin`)
-                  }
-                  className="text-blue-600 font-semibold"
+                  className="text-blue-600 font-semibold hover:underline"
                 >
                   Sign in
                 </button>
               </p>
             </div>
-          </form>
+          </div>
         </div>
 
         {/* Footer Info */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-6 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-2xl px-6 py-4"
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="mt-4 sm:mt-6 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4"
         >
-          <div className="flex items-start gap-3">
-            <svg className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex items-start gap-2.5 sm:gap-3">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <div>
-              <p className="text-sm font-semibold text-gray-800 mb-1">Your Privacy Matters</p>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs sm:text-sm font-semibold text-gray-800 mb-0.5 sm:mb-1">Your Privacy Matters</p>
+              <p className="text-xs text-gray-600 leading-relaxed">
                 All information provided is encrypted and will only be used for interview purposes. We respect your privacy and handle your data with care.
               </p>
             </div>
           </div>
         </motion.div>
       </motion.div>
-  
     </div>
   );
 };

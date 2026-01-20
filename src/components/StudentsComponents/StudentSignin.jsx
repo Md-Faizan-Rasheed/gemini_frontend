@@ -32,26 +32,26 @@ const StudentSignin = () => {
   });
 
   /* ===================== AUTO LOGIN CHECK ===================== */
-  useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        console.log("Checking login status...");
-const res = await api.get("/check-auth", {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`
-  }
-});
+//   useEffect(() => {
+//     const checkLogin = async () => {
+//       try {
+//         console.log("Checking login status...");
+// const res = await api.get("/check-auth", {
+//   headers: {
+//     Authorization: `Bearer ${localStorage.getItem("token")}`
+//   }
+// });
 
-        if (res.data.success) {
-          const studentId =  localStorage.getItem("studentId");
-          navigate(`/StudentHomePage/${studentId}`);
-        }
-      } catch (err) {
-        console.log("User not logged in yet");
-      }
-    };
-    checkLogin();
-  }, [navigate]);
+//         if (res.data.success) {
+//           const studentId =  localStorage.getItem("studentId");
+//           // navigate(`/StudentHomePage/${studentId}`);
+//         }
+//       } catch (err) {
+//         console.log("User not logged in yet");
+//       }
+//     };
+//     checkLogin();
+//   }, [navigate]);
 
   /* ===================== HANDLERS ===================== */
   const handleInputChange = (e) => {

@@ -639,7 +639,7 @@ const Alljobs = () => {
                         </p>
                         {!searchTerm && filterStatus === 'all' && (
                             <button 
-                                onClick={() => navigate('/post-job')}
+                                onClick={() => navigate('/jobpost')}
                                 className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-lime-500 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
                             >
                                 <Plus className="w-5 h-5" />
