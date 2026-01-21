@@ -230,7 +230,7 @@ const StudentSignin = () => {
                 Don't have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => navigate(`/StudentSignup`)}
+                  onClick={() => navigate(`/organisationsignup`)}
                   className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
                 >
                   Sign Up
