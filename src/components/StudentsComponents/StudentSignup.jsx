@@ -700,6 +700,7 @@ const StudentSignup = () => {
   //   }, 1500);
   // };
 
+  
     const handleVerifyPhone = async () => {
     if (!formData.phoneNumber) {
       showToast("Please enter phone number first.", "warning");
