@@ -8,7 +8,7 @@ const PreviewAndPublish = () => {
   const [loggedInUser, setLoggedInUser] = useState('');
   const [jobPostData, setJobPostData] = useState(null);
   const [formattedQuestionsData, setFormattedQuestionsData] = useState(null);
-
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,6 +47,7 @@ const PreviewAndPublish = () => {
 
     try {
       const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+
         method: 'POST',
         headers: {
           authorization: `${localStorage.getItem('token')}`,
@@ -85,6 +86,7 @@ const PreviewAndPublish = () => {
   console.log('Questions Array:', questionsArray);
 
   const handleSubmit = async (status) => {
+    setLoading(true);
     const userId = await fetchUserId();
     if (!userId) {
       console.error('User ID not found, cannot proceed.');
@@ -118,6 +120,7 @@ const PreviewAndPublish = () => {
       if (!response.ok) {
         toast.error(result.error);
         console.error('Error:', result.error);
+        setLoading(false);
       } else {
         localStorage.removeItem("aiQuestions");
         localStorage.removeItem("jobPostData");
@@ -127,6 +130,7 @@ const PreviewAndPublish = () => {
     } catch (error) {
       console.error('Request failed:', error);
       toast.error('An error occurred. Please try again.');
+      setLoading(false);
 
     }
   };
@@ -282,16 +286,18 @@ const PreviewAndPublish = () => {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
             <div className="flex gap-2">
               <button
+                  disabled={loading}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
                 onClick={() => handleSubmit('Drafted')}
               >
-                Save Job
+              {loading ? "Saving..." : "Save Job"}
               </button>
               <button
+                disabled={loading}
                 className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600"
                 onClick={() => handleSubmit('Published')}
               >
-                Publish Job
+             {loading ? "Publishing..." : "Publish Job"}
               </button>
             </div>
           </div>
