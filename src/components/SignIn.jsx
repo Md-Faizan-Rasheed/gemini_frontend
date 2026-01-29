@@ -467,6 +467,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./Context/AuthContext";
 import { useToast } from "./Context/ToastContext.jsx";
+// import {socket} from "../components/OrganisationComponents/service/socket.js"
 
 const SignIn = () => {
   const { isLoggedIn, login, logout } = useContext(AuthContext);
@@ -526,6 +527,18 @@ const SignIn = () => {
         showToast(message, "success");
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("loggedInUser", name);
+
+
+  // socket.connect();
+  // // join user room
+  // socket.emit("join", "userId4344334"); // <-- pass logged user id
+
+  // // listen for payment success
+  // socket.on("paymentSuccess", (data) => {
+  //   console.log("Payment Success Data:", data);
+  //   showToast(data.message, "success");
+  // });
+
         login();
         navigate("/dashboard");
         console.log("Login successful!");

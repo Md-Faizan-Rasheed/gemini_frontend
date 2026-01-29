@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import Onavbar from "./Onavbar";
 import {
@@ -28,8 +28,11 @@ import { AuthContext } from "../Context/AuthContext";
 const Dashboard = () => {
   const [isNameDropdownOpen, setIsNameDropdownOpen] = useState(false);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-  const [loggedInUser] = useState("Admin");
-  const [initial] = useState("A");
+
+  const [loggedInUser, setLoggedInUser] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [initial,setInitial] = useState("");
   const navigate = useNavigate();
 
   const { isLoggedIn, logout } = useContext(AuthContext);
@@ -43,13 +46,14 @@ const Dashboard = () => {
       toast.error("Something went wrong");
     }
   };
+  
 
   const handleLogout = () => {
     logout();
     navigate("/signin");
   };
    /* ================= API HELPERS ================= */
-  const fetchUserId = async () => {
+  const fetchUserDetails = async () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch("https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id", {
@@ -62,10 +66,20 @@ const Dashboard = () => {
     });
 
     const data = await res.json();
-    return data.userId;
+
+    const response = await fetch(`https://jubilant-fortnight-node-backend.onrender.com/jobs/api/users/${data.userId}`);
+     const Userdata = await response.json();
+
+      setLoggedInUser(Userdata.company_name);
+      setEmail(Userdata.email);
+      setInitial(Userdata.company_name.charAt(0).toUpperCase());  
+   
+
   };
 
-
+useEffect(() => {
+    fetchUserDetails();
+  }, []);
   const stats = [
     {
       title: "New Interviews",
@@ -145,7 +159,7 @@ const Dashboard = () => {
                   </div>
                   <div className="hidden md:block text-left">
                     <p className="text-sm font-semibold text-gray-800">{loggedInUser}</p>
-                    <p className="text-xs text-gray-500">Administrator</p>
+                    {/* <p className="text-xs text-gray-500">Administrator</p> */}
                   </div>
                   <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isAvatarDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -166,7 +180,7 @@ const Dashboard = () => {
                           </div>
                           <div>
                             <p className="font-semibold text-gray-800">{loggedInUser}</p>
-                            <p className="text-xs text-gray-600">admin@Cerplunk.com</p>
+                            <p className="text-xs text-gray-600">{email}</p>
                           </div>
                         </div>
                       </div>
@@ -214,6 +228,8 @@ const Dashboard = () => {
                   </>
                 )}
               </div>
+
+
             </div>
           </div>
         </header>

@@ -990,110 +990,6 @@ useEffect(() => {
 }, [navigate]);
 
 
-// // Add this useEffect to monitor fullscreen changes:
-// useEffect(() => {
-//   const handleFullscreenChange = () => {
-//     const isFullscreen = !!(
-//       document.fullscreenElement ||
-//       document.webkitFullscreenElement ||
-//       document.msFullscreenElement
-//     );
-
-//     // Only track exits during active interview (step 2)
-//     if (!isFullscreen && isInterviewActiveRef.current && step === 2) {
-//       setFullscreenExitCount((prev) => {
-//         const newCount = prev + 1;
-        
-//         if (newCount === 1) {
-//           // First warning
-//           setWarningMessage("⚠️ Warning 1/2: Please stay in fullscreen mode during the interview.");
-//           setShowFullscreenWarning(true);
-          
-//           // Auto-hide warning and re-enter fullscreen
-//           setTimeout(() => {
-//             setShowFullscreenWarning(false);
-//             enterFullscreen();
-//           }, 3000);
-          
-//         } else if (newCount === 2) {
-//           // Second warning
-//           setWarningMessage("⚠️ Final Warning 2/2: Exiting fullscreen again will end the interview!");
-//           setShowFullscreenWarning(true);
-          
-//           // Auto-hide warning and re-enter fullscreen
-//           setTimeout(() => {
-//             setShowFullscreenWarning(false);
-//             enterFullscreen();
-//           }, 3000);
-          
-//         } else if (newCount >= 3) {
-//           // End interview on third exit
-//           setWarningMessage("❌ Interview terminated due to multiple fullscreen exits.");
-//           setShowFullscreenWarning(true);
-          
-//           // End the interview
-//           stopListening();
-//           synthRef.current.cancel();
-          
-//           setTimeout(async () => {
-//             setShowFullscreenWarning(false);
-//             await completeSession(sessionIdRef.current);
-            
-//             // Save a note about early termination
-//             const terminationNote = "Interview terminated: Candidate exited fullscreen mode more than 2 times.";
-//             conversationHistoryRef.current.push({
-//               role: "system",
-//               content: terminationNote
-//             });
-            
-//             await generateReport();
-//           }, 2000);
-//         }
-        
-//         return newCount;
-//       });
-//     }
-//   };
-
-//   // Add event listeners for fullscreen change
-//   document.addEventListener("fullscreenchange", handleFullscreenChange);
-//   document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-//   document.addEventListener("msfullscreenchange", handleFullscreenChange);
-
-//   return () => {
-//     document.removeEventListener("fullscreenchange", handleFullscreenChange);
-//     document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-//     document.removeEventListener("msfullscreenchange", handleFullscreenChange);
-//   };
-// }, [step]);
-
-// // Add this function to enter fullscreen:
-// const enterFullscreen = async () => {
-//   try {
-//     const elem = document.documentElement;
-//     if (elem.requestFullscreen) {
-//       await elem.requestFullscreen();
-//     } else if (elem.webkitRequestFullscreen) {
-//       await elem.webkitRequestFullscreen();
-//     } else if (elem.msRequestFullscreen) {
-//       await elem.msRequestFullscreen();
-//     }
-//   } catch (err) {
-//     console.error("Error entering fullscreen:", err);
-//     setError("Unable to enter fullscreen mode");
-//   }
-// };
-
-// // Add this function to exit fullscreen:
-// const exitFullscreen = () => {
-//   if (document.exitFullscreen) {
-//     document.exitFullscreen();
-//   } else if (document.webkitExitFullscreen) {
-//     document.webkitExitFullscreen();
-//   } else if (document.msExitFullscreen) {
-//     document.msExitFullscreen();
-//   }
-// };
 
 
 
@@ -2274,13 +2170,13 @@ const resetInterview = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={resetInterview}
+                  onClick={()=>navigate(`/StudentHomePage/${studentId}`)}
                   className="mt-6 md:mt-8 w-full py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-base md:text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-3 group"
                 >
                   <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  Start New Interview
+                    Start Another Interview
                 </motion.button>
               </div>
             </motion.div>

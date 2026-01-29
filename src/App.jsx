@@ -70,13 +70,13 @@ const App = () => {
     <Route path="/organisationsignup" element={<OrganisationSignup />} />
     <Route path="/reset-password/:resetToken" element={<ResetPasswordPage />} />
     <Route path="/login" element={<LoginForm />} /> 
-    <Route path="/PricingPage" element={<PricingPage />} />
     <Route path="/ContactUsPage" element={<ContactUsPage />} />
     
    
     {/* 🔐 Protected */}
     <Route element={<Protectedroute />}>
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/PricingPage" element={<PricingPage />} />
       <Route path="/jobpost" element={<Jobpost />} />
       <Route path="/aiquestion" element={<Aiquestion />} />
       <Route path="/preview-and-publish" element={<PreviewAndPublish />} />

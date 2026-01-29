@@ -8,10 +8,11 @@ import {
   X, 
   Zap, 
   LogOut, 
-  UserCircle2,
+  UserCircle2, 
   ChevronRight,
   Sparkles
 } from "lucide-react";
+// import {socket} from "../components//OrganisationComponents/service/socket.js"  
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,6 +37,7 @@ const Navbar = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("jobPostData");
     localStorage.removeItem("jobs");
+    // socket.disconnect();
     logout();
     navigate("/SignIn");
   };
