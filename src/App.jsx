@@ -25,6 +25,7 @@ import { AuthProvider } from "./components/Context/AuthContext.jsx";
 import LoginForm from "./components/Login.jsx";
 import StudentInfo from "./components/OrganisationComponents/StudentInfo.jsx";
 import InterviewPage from "./components/OrganisationComponents/InterviewPage.jsx";
+import InterviewPage1 from "./components/OrganisationComponents/InterviewPage1.jsx";
 import LayoutWithNavbar from "./components/LayoutWithNavbar";
 import RecentInterviews from "./components/OrganisationComponents/RecentInterviews.jsx";
 import StudentSignup from "./components/StudentsComponents/StudentSignup.jsx";
@@ -50,7 +51,9 @@ const App = () => {
 
   {/* ❌ NO NAVBAR */}
   <Route path="/studentinfo/:id" element={<StudentInfo />} />
-  <Route path="/interview/:id" element={<InterviewPage />} />
+  {/* <Route path="/interview/:id" element={<InterviewPage />} /> */}
+    <Route path="/interview/:id" element={<InterviewPage1 />} />
+
   <Route path="/jobs/:id" element={<JobDetails />} />
   <Route path="/StudentSignup" element={<StudentSignup />} />
     <Route path="/StudentSignin" element={<StudentSignin />} />

@@ -149,7 +149,8 @@ useEffect(() => {
               </button>
 
               {/* User Profile Dropdown */}
-              <div className="relative">
+              {/* <div className="relative"> */}
+              <div className="relative sm:relative static">
                 <button
                   onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
                   className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -171,7 +172,8 @@ useEffect(() => {
                       className="fixed inset-0 z-10"
                       onClick={() => setIsAvatarDropdownOpen(false)}
                     />
-                    <div className="absolute right-0 top-14 bg-white rounded-xl shadow-xl border border-gray-200 w-64 z-20 overflow-hidden">
+                    {/* <div className="absolute right-0 top-14 bg-white rounded-xl shadow-xl border border-gray-200 w-64 z-20 overflow-hidden"> */}
+                    <div className="absolute right-0 top-14 bg-white rounded-xl shadow-xl border border-gray-200 w-64 z-20 overflow-hidden" style={{ maxWidth: 'calc(100vw - 32px)', right: 'auto', left: 'max(0px, calc(50% - 128px))', transform: 'translateX(0)' }}>
                       {/* User Info */}
                       <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
                         <div className="flex items-center gap-3">
