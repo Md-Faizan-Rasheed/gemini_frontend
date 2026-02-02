@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, MessageSquare, Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const FeedbackForm = ({ onSubmit, darkMode, isProcessing }) => {
+const FeedbackForm = ({ onSubmit, darkMode, isProcessing }) => {  
   const [feedback, setFeedback] = useState({
     difficulty: 3,
     fairness: 5,
@@ -13,10 +14,47 @@ const FeedbackForm = ({ onSubmit, darkMode, isProcessing }) => {
   });
 
   const [hoveredRating, setHoveredRating] = useState({});
+  //  const [isProcessing, setIsProcessing] = useState(false);
+  // const navigate = useNavigate();
+
 
   const handleSubmit = () => {
     onSubmit(feedback);
   };
+
+
+  // const handleSubmit = async (feedback) => {
+  //   try {
+  //     setIsProcessing(true);
+
+  //     const res = await fetch(
+  //       `${import.meta.env.VITE_API_BASE_URL}/api/feedback`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json"
+  //         },
+  //         body: JSON.stringify({
+  //           studentId: user._id,
+  //           ...feedback
+  //         })
+  //       }
+  //     );
+
+  //     const data = await res.json();
+
+  //     if (!res.ok) throw new Error(data.message);
+
+  //     navigate(`/report/${data.data._id}`);
+  //         onSubmit(feedback);
+
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert(err.message);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
 
   const StarRating = ({ value, onChange, label, name }) => {
     return (
@@ -192,3 +230,167 @@ const FeedbackForm = ({ onSubmit, darkMode, isProcessing }) => {
 };
 
 export default FeedbackForm;
+
+
+
+// import { useState } from "react";
+// import { motion } from "framer-motion";
+// import { Star, MessageSquare, Loader } from "lucide-react";
+// import { useNavigate } from "react-router-dom";
+
+// const FeedbackForm = ({ studentId, darkMode = false }) => {
+//   const navigate = useNavigate();
+
+//   const [isProcessing, setIsProcessing] = useState(false);
+//   const [hoveredRating, setHoveredRating] = useState({});
+
+//   const [feedback, setFeedback] = useState({
+//     difficulty: 3,
+//     fairness: 5,
+//     technicalIssues: false,
+//     aiQuality: 5,
+//     overallExperience: 5,
+//     comments: ""
+//   });
+
+//   // ✅ Correct submit handler
+//   const handleSubmit = async () => {
+//     try {
+//       setIsProcessing(true);
+
+//       const res = await fetch(
+//         `https://jubilant-fortnight-node-backend.onrender.com/api/feedback`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json"
+//           },
+//           body: JSON.stringify({
+//             studentId,
+//             ...feedback
+//           })
+//         }
+//       );
+
+//       const data = await res.json();
+
+//       if (!res.ok) {
+//         throw new Error(data.message || "Failed to submit feedback");
+//       }
+
+//       // ✅ Navigate to report
+//       // await generatRe
+//     } catch (err) {
+//       console.error("Submit error:", err);
+//       alert(err.message);
+//     } finally {
+//       setIsProcessing(false);
+//     }
+//   };
+
+//   const StarRating = ({ value, onChange, label, name }) => (
+//     <div className="mb-6">
+//       <label className="block text-sm font-semibold mb-3">{label}</label>
+//       <div className="flex gap-2">
+//         {[1, 2, 3, 4, 5].map((star) => (
+//           <motion.button
+//             key={star}
+//             type="button"
+//             whileHover={{ scale: 1.2 }}
+//             whileTap={{ scale: 0.9 }}
+//             onMouseEnter={() =>
+//               setHoveredRating((p) => ({ ...p, [name]: star }))
+//             }
+//             onMouseLeave={() =>
+//               setHoveredRating((p) => ({ ...p, [name]: 0 }))
+//             }
+//             onClick={() => onChange(star)}
+//             className="focus:outline-none"
+//           >
+//             <Star
+//               className={`w-8 h-8 ${
+//                 star <= (hoveredRating[name] || value)
+//                   ? "fill-yellow-400 text-yellow-400"
+//                   : "text-gray-300 dark:text-gray-600"
+//               }`}
+//             />
+//           </motion.button>
+//         ))}
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-2xl shadow-2xl p-6 md:p-8 max-w-2xl mx-auto`}
+//     >
+//       <div className="text-center mb-8">
+//         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4">
+//           <MessageSquare className="w-8 h-8 text-white" />
+//         </div>
+//         <h2 className="text-2xl md:text-3xl font-bold mb-2">
+//           How was your experience?
+//         </h2>
+//         <p className="text-gray-600 dark:text-gray-400">
+//           Your feedback helps us improve the interview experience
+//         </p>
+//       </div>
+
+//       {/* Difficulty */}
+//       <input
+//         type="range"
+//         min="1"
+//         max="5"
+//         value={feedback.difficulty}
+//         onChange={(e) =>
+//           setFeedback({ ...feedback, difficulty: +e.target.value })
+//         }
+//         className="w-full accent-blue-500"
+//       />
+
+//       <StarRating
+//         label="Questions were fair and relevant"
+//         value={feedback.fairness}
+//         name="fairness"
+//         onChange={(v) => setFeedback({ ...feedback, fairness: v })}
+//       />
+
+//       <StarRating
+//         label="AI Interviewer Quality"
+//         value={feedback.aiQuality}
+//         name="aiQuality"
+//         onChange={(v) => setFeedback({ ...feedback, aiQuality: v })}
+//       />
+
+//       <StarRating
+//         label="Overall Experience"
+//         value={feedback.overallExperience}
+//         name="overallExperience"
+//         onChange={(v) => setFeedback({ ...feedback, overallExperience: v })}
+//       />
+
+//       {/* Submit */}
+//       <motion.button
+//         disabled={isProcessing}
+//         onClick={handleSubmit}
+//         className={`w-full py-4 rounded-xl font-bold ${
+//           isProcessing
+//             ? "bg-gray-400"
+//             : "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+//         }`}
+//       >
+//         {isProcessing ? (
+//           <span className="flex justify-center gap-2">
+//             <Loader className="animate-spin" /> Submitting...
+//           </span>
+//         ) : (
+//           "Submit Feedback & View Report"
+//         )}
+//       </motion.button>
+//     </motion.div>
+//   );
+// };
+
+// export default FeedbackForm;

@@ -545,6 +545,13 @@ const StudentInterviewPage = () => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
+  // Ensure processingAI is false when entering feedback step
+useEffect(() => {
+  if (step === 3) {
+    setProcessingAI(false);
+    console.log("📋 Feedback form displayed - processingAI reset");
+  }
+}, [step]);
   // ============== AI VOICE ==============
   const speak = useCallback(
     (text) =>
@@ -660,16 +667,45 @@ const StudentInterviewPage = () => {
 
       await speak(aiMessage);
 
-      if (aiMessage.includes("INTERVIEW_COMPLETE")) {
-        setInterviewComplete(true);
-        await completeSession(sessionIdRef.current);
-        localStorage.removeItem('interviewBackup');
-        setStep(3);
-        return;
-      }
+      // if (aiMessage.includes("INTERVIEW_COMPLETE")) {
+      //   setInterviewComplete(true);
+      //   await completeSession(sessionIdRef.current);
+      //   localStorage.removeItem('interviewBackup');
+      //   setStep(3);
+      //   return;
+      // }
 
-      setProcessingAI(false);
-      setTimeout(() => startListening(), 500);
+      // setProcessingAI(false);
+      // setTimeout(() => startListening(), 500);
+
+      // Check for INTERVIEW_COMPLETE
+if (aiMessage.includes("INTERVIEW_COMPLETE")) {
+  console.log("✅ Interview complete! Moving to feedback...");
+  
+  setInterviewComplete(true);
+  
+  // Complete session in background
+  completeSession(sessionIdRef.current).catch(err => 
+    console.error("Session completion error:", err)
+  );
+  
+  // Clear backup
+  localStorage.removeItem('interviewBackup');
+  
+  // ⚠️ CRITICAL: Reset processingAI BEFORE changing step
+  setProcessingAI(false);  // <--- THIS IS THE KEY FIX
+  
+  // Small delay to ensure state updates
+  setTimeout(() => {
+    setStep(3);
+  }, 100);
+  
+  // Exit early
+  return;
+}
+// If not complete, continue as normal
+    setProcessingAI(false);
+    setTimeout(() => startListening(), 500);
 
     } catch (err) {
       console.error("❌ AI response error:", err);
@@ -1061,23 +1097,37 @@ Tone:
   // ============== HANDLE FEEDBACK SUBMISSION ==============
   const handleFeedbackSubmit = async (feedback) => {
     setInterviewFeedback(feedback);
+    console.log("feedback received:", feedback);  
+
+    setProcessingAI(true);  // <--- Now it's correct to be true
+
     
     try {
-      await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: sessionIdRef.current,
-          studentId,
-          jobId,
-          feedback
-        }),
-      });
+      const res = await fetch(
+        `https://jubilant-fortnight-node-backend.onrender.com/api/interview-feedback`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            studentId,
+            ...feedback
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to submit feedback");
+      }
+
       console.log("✅ Feedback saved");
     } catch (err) {
       console.error("❌ Feedback save error:", err);
     }
-
+    
     await generateReport();
   };
 
@@ -1602,6 +1652,12 @@ Tone:
                 darkMode={darkMode}
                 isProcessing={processingAI}
               />
+              {/* <FeedbackForm
+  onSubmit={handleFeedbackSubmit}
+  studentId={studentId}
+  darkMode={true}
+/> */}
+
             </motion.div>
           )}
 
