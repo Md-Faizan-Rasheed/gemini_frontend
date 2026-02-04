@@ -35,7 +35,7 @@ import StudentInterviewPage from "./components/StudentsComponents/StudentIntervi
 import ContactUsPage from "./components/OrganisationComponents/ContactUsPage.jsx";
 import PricingPage from "./components/OrganisationComponents/PricingPage.jsx";
 import  {ToastProvider}  from './components/Context/ToastContext.jsx';
-
+import AdminDashboard from "./components/AdminComponents/Admindashboard.jsx";
 // Context API
 export const UserContext = createContext();
 
@@ -60,7 +60,7 @@ const App = () => {
    <Route path="/StudentHomePage/:studentId" element={<StudentHomePage />} />
     <Route path="/StudentInterviewPage/:studentId" element={<StudentInterviewPage />} />
 
-
+  <Route path="AdminDashboard" element={<AdminDashboard />} />
 
   {/* ✅ WITH NAVBAR */}
   <Route element={<LayoutWithNavbar />}>

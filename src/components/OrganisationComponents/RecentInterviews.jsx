@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Download,
@@ -31,6 +32,7 @@ const shimmerStyles = `
 `;
 
 const InterviewDashboard = () => {
+  const navigate = useNavigate();
   /* ================= STATE ================= */
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -231,7 +233,13 @@ ${selectedReport.report}
       <header className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm">
-            <span className="opacity-80">Dashboard</span>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="opacity-80 hover:opacity-100 transition-opacity"
+            >
+              Dashboard
+            </button>
             <span className="opacity-60">›</span>
             <span>Interview Reports</span>
           </div>
@@ -705,4 +713,3 @@ ${selectedReport.report}
 };
 
 export default InterviewDashboard;
-
