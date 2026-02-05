@@ -19,7 +19,7 @@ const Alljobs = () => {
     const fetchUserId = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+            const response = await fetch('http://localhost:8080/jobs/api/user-id', {
                 method: 'POST',
                 headers: {
                     'authorization': `${localStorage.getItem('token')}`,
@@ -55,7 +55,7 @@ const Alljobs = () => {
                 return [];
             }
 
-            const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/jobs/api/all-jobs", {
+            const response = await fetch("http://localhost:8080/jobs/api/all-jobs", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -121,7 +121,7 @@ const Alljobs = () => {
                 return;
             }
 
-            const response = await fetch(`https://jubilant-fortnight-node-backend.onrender.com/jobs/api/delete-job/${id}`, {
+            const response = await fetch(`http://localhost:8080/jobs/api/delete-job/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,

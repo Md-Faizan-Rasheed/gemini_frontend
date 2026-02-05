@@ -9,10 +9,8 @@ const ResetPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // const token = localStorage.getItem('token');
-     console.log("Tokent in reset",resetToken);
-     console.log("password",password);
     try {
-      const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/jobs/api/update-password", {
+      const response = await fetch("http://localhost:8080/jobs/api/update-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resetToken, password }),
@@ -51,3 +49,4 @@ const ResetPasswordPage = () => {
 };
 
 export default ResetPasswordPage;
+

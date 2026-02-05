@@ -63,7 +63,7 @@
 //     console.log("Youe are in sign page!!");
 
 //     try {
-//       const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/auth/login", {
+//       const response = await fetch("http://localhost:8080/auth/login", {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -240,7 +240,7 @@
 //     }
 
 //     try {
-//       const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/auth/login", {
+//       const response = await fetch("http://localhost:8080/auth/login", {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -497,7 +497,6 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sign in page");
 
     const { email, password } = loginInfo;
 
@@ -509,7 +508,7 @@ const SignIn = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/auth/login", {
+      const response = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -518,12 +517,10 @@ const SignIn = () => {
       });
 
       const result = await response.json();
-      console.log("Result", result);
 
       const { sucess, message, jwtToken, name, error } = result;
       
       if (sucess) {
-        console.log("Result2");
         showToast(message, "success");
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("loggedInUser", name);
@@ -541,7 +538,6 @@ const SignIn = () => {
 
         login();
         navigate("/dashboard");
-        console.log("Login successful!");
       } else {
         showToast(error?.details?.[0]?.message || message, "error");
         setIsLoading(false);

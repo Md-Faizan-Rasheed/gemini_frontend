@@ -46,7 +46,7 @@
 //     console.log('Token:', token);
 
 //     try {
-//       const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+//       const response = await fetch('http://localhost:8080/jobs/api/user-id', {
 
 //         method: 'POST',
 //         headers: {
@@ -105,7 +105,7 @@
 //     console.log('Job Data:', jobData);
 
 //     try {
-//       const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/add', {
+//       const response = await fetch('http://localhost:8080/jobs/add', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -356,14 +356,12 @@ const PreviewAndPublish = () => {
 
   useEffect(() => {
     const user = localStorage.getItem('loggedInUser');
-    console.log('Logged in user:', user);
 
     if (user) {
       setLoggedInUser(user);
     }
   }, []);
 
-  console.log('Data on Preview and Publish:', parsedData);
 
   const handlenavigateAi = () => {
     navigate('/Aiquestion', {
@@ -379,10 +377,9 @@ const PreviewAndPublish = () => {
 
   const fetchUserId = async () => {
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
 
     try {
-      const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+      const response = await fetch('http://localhost:8080/jobs/api/user-id', {
         method: 'POST',
         headers: {
           authorization: `${localStorage.getItem('token')}`,
@@ -392,7 +389,6 @@ const PreviewAndPublish = () => {
         body: JSON.stringify({ token }),
       });
 
-      console.log('Response Status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -405,9 +401,7 @@ const PreviewAndPublish = () => {
       }
 
       const data = await response.json();
-      console.log('User Data:', data);
 
-      console.log('User ID:', data.userId);
       return data.userId;
     } catch (error) {
       console.error('Error fetching user ID:', error.message);
@@ -418,7 +412,6 @@ const PreviewAndPublish = () => {
   const questionsArray = dataforquestion.map(({ question }) => ({
     questionText: question,
   }));
-  console.log('Questions Array:', questionsArray);
 
   const handleSubmit = async (status) => {
     setLoading(true);
@@ -439,10 +432,9 @@ const PreviewAndPublish = () => {
       userId,
     };
 
-    console.log('Job Data:', jobData);
 
     try {
-      const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/add', {
+      const response = await fetch('http://localhost:8080/jobs/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -452,7 +444,6 @@ const PreviewAndPublish = () => {
       });
 
       const result = await response.json();
-      console.log('Server Response:', result);
       if (!response.ok) {
         if (response.status === 403) {
           toast.error("Job limit reached. Upgrade your plan.");

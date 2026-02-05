@@ -56,7 +56,7 @@ const Dashboard = () => {
   const fetchUserDetails = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id", {
+    const res = await fetch("http://localhost:8080/jobs/api/user-id", {
       method: "POST",
       headers: {
         authorization: token,
@@ -67,7 +67,7 @@ const Dashboard = () => {
 
     const data = await res.json();
 
-    const response = await fetch(`https://jubilant-fortnight-node-backend.onrender.com/jobs/api/users/${data.userId}`);
+    const response = await fetch(`http://localhost:8080/jobs/api/users/${data.userId}`);
      const Userdata = await response.json();
 
       setLoggedInUser(Userdata.company_name);

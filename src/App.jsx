@@ -32,6 +32,7 @@ import StudentSignup from "./components/StudentsComponents/StudentSignup.jsx";
 import StudentSignin from "./components/StudentsComponents/StudentSignin.jsx";
 import StudentHomePage from "./components/StudentsComponents/StudentHomePage.jsx";
 import StudentInterviewPage from "./components/StudentsComponents/StudentInterviewPage.jsx";
+import StudentHistoryPage from "./components/StudentsComponents/StudentHistoryPage.jsx";
 import ContactUsPage from "./components/OrganisationComponents/ContactUsPage.jsx";
 import PricingPage from "./components/OrganisationComponents/PricingPage.jsx";
 import  {ToastProvider}  from './components/Context/ToastContext.jsx';
@@ -59,6 +60,7 @@ const App = () => {
     <Route path="/StudentSignin" element={<StudentSignin />} />
    <Route path="/StudentHomePage/:studentId" element={<StudentHomePage />} />
     <Route path="/StudentInterviewPage/:studentId" element={<StudentInterviewPage />} />
+    <Route path="/StudentHistory/:studentId" element={<StudentHistoryPage />} />
 
   <Route path="AdminDashboard" element={<AdminDashboard />} />
 
