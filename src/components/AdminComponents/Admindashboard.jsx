@@ -12,7 +12,7 @@ import {
 // Import detailed view components
 import { DetailedStudentsView, DetailedInterviewsView } from './Admindetailedviews';
 
-const API_BASE = 'http://localhost:8080/admin';
+const API_BASE = 'https://jubilant-fortnight-node-backend.onrender.com/admin';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
       try {
         setStatsLoading(true);
         setStatsError(null);
-        const response = await fetch('http://localhost:8080/admin/stats');
+        const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/admin/stats');
         if (!response.ok) throw new Error('Failed to fetch dashboard stats');
         const data = await response.json();
         if (!isMounted) return;

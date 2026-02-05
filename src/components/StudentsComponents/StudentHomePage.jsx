@@ -56,7 +56,7 @@ export default function StudentHomePage() {
   const { showToast } = useToast();
 
   const api = axios.create({
-    baseURL: "http://localhost:8080/students",
+    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
     withCredentials: true,
   });
 
@@ -354,7 +354,7 @@ export default function StudentHomePage() {
         level: skillLevels[s] || "Beginner",
       }));
 
-      await axios.patch("http://localhost:8080/students/update-skills", {
+      await axios.patch("https://jubilant-fortnight-node-backend.onrender.com/students/update-skills", {
         studentId,
         skills: formattedSkills,
       });

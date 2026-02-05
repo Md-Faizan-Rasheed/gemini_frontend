@@ -38,7 +38,7 @@ const StudentSignup = () => {
   };
 
     const api = axios.create({
-    baseURL: "http://localhost:8080/students",
+    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
     withCredentials: true, // ✅ allows JWT cookies
   });
 

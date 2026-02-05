@@ -49,7 +49,7 @@
 //   const { showToast } = useToast();
 
 //   const api = axios.create({
-//     baseURL: "http://localhost:8080/students",
+//     baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
 //     withCredentials: true,
 //   });
 
@@ -80,14 +80,14 @@
 //       setHistoryError(null);
 //       try {
 //         const skillsRes = await fetch(
-//           `http://localhost:8080/students/student-skill/${studentId}`,
+//           `https://jubilant-fortnight-node-backend.onrender.com/students/student-skill/${studentId}`,
 //           { method: "GET" }
 //         );
 //         const skillsJson = await skillsRes.json();
 //         setStudentProfileSkills(skillsJson?.student?.skills || []);
 
 //         const reportsRes = await fetch(
-//           `http://localhost:8080/students/student-report/${studentId}`,
+//           `https://jubilant-fortnight-node-backend.onrender.com/students/student-report/${studentId}`,
 //           {
 //             headers: {
 //               authorization: localStorage.getItem("token"),
@@ -398,7 +398,7 @@ export default function StudentHistoryPage() {
   const { showToast } = useToast();
 
   const api = axios.create({
-    baseURL: "http://localhost:8080/students",
+    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
     withCredentials: true,
   });
 
@@ -429,14 +429,14 @@ export default function StudentHistoryPage() {
       setHistoryError(null);
       try {
         const skillsRes = await fetch(
-          `http://localhost:8080/students/student-skill/${studentId}`,
+          `https://jubilant-fortnight-node-backend.onrender.com/students/student-skill/${studentId}`,
           { method: "GET" }
         );
         const skillsJson = await skillsRes.json();
         setStudentProfileSkills(skillsJson?.student?.skills || []);
 
         const reportsRes = await fetch(
-          `http://localhost:8080/students/student-report/${studentId}`,
+          `https://jubilant-fortnight-node-backend.onrender.com/students/student-report/${studentId}`,
           {
             headers: {
               authorization: localStorage.getItem("token"),

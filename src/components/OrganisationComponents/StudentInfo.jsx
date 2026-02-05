@@ -62,7 +62,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/jobs/send-otp",
+        "https://jubilant-fortnight-node-backend.onrender.com/jobs/send-otp",
         { phoneNumber: formData.phoneNumber }
       );
 
@@ -81,7 +81,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8080/jobs/verify-otp",
+        "https://jubilant-fortnight-node-backend.onrender.com/jobs/verify-otp",
         {
           phoneNumber: formData.phoneNumber,
           otp: formData.otp,
@@ -185,7 +185,7 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:8080/jobs/save-student-details",
+      "https://jubilant-fortnight-node-backend.onrender.com/jobs/save-student-details",
       submissionData // ✅ Use this instead of formData
     );
 
@@ -238,7 +238,7 @@ const handleSubmit = async (e) => {
 
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:8080/jobs/save-student-details",
+  //       "https://jubilant-fortnight-node-backend.onrender.com/jobs/save-student-details",
   //       formData
   //     );
 

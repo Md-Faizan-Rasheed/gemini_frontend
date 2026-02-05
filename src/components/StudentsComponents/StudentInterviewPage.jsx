@@ -23,7 +23,7 @@ import StepReport from "./interview/StepReport.jsx";
 import ProgressBar from "./interview/ProgressBar.jsx";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/students",
+  baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
   withCredentials: true,
 });
 
@@ -512,7 +512,7 @@ const StudentInterviewPage = () => {
       setLoading(true);
       try {
         const studentResponse = await fetchWithRetry(
-          `http://localhost:8080/students/student-skill/${studentId}`,
+          `https://jubilant-fortnight-node-backend.onrender.com/students/student-skill/${studentId}`,
           { method: 'GET' }
         );
 
@@ -1051,7 +1051,7 @@ Tone:
       localStorage.removeItem('interviewBackup');
 
       try {
-        const saveRes = await fetch("http://localhost:8080/api/interview-report", {
+        const saveRes = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1093,7 +1093,7 @@ Tone:
     
     try {
       const res = await fetch(
-        `http://localhost:8080/api/interview-feedback`,
+        `https://jubilant-fortnight-node-backend.onrender.com/api/interview-feedback`,
         {
           method: "POST",
           headers: {
