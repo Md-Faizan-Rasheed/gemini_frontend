@@ -104,13 +104,16 @@ export default function StudentHomePage() {
     try {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed)) {
-        const normalized = parsed.map((d) => ({
-          ...d,
-          icon: d.icon || Plus,
-          color: d.color || "from-slate-400 to-gray-500",
-          skills: Array.isArray(d.skills) ? d.skills : [],
-          isCustom: true,
-        }));
+        const normalized = parsed.map((d) => {
+          const icon = typeof d.icon === "function" ? d.icon : Plus;
+          return {
+            ...d,
+            icon,
+            color: d.color || "from-slate-400 to-gray-500",
+            skills: Array.isArray(d.skills) ? d.skills : [],
+            isCustom: true,
+          };
+        });
         setCustomDomains(normalized);
       }
     } catch {
@@ -966,4 +969,3 @@ export default function StudentHomePage() {
     </div>
   );
 }
-
