@@ -481,7 +481,6 @@ const Jobpost = () => {
         setJobDescription(formattedDescriptionString);
       }
     } catch (error) {
-      console.log("Failed to generate description:", error);
     } finally {
       setIsLoading(false);
     }

@@ -21,11 +21,9 @@ export const useInterviewLogic = ({
 
   const submitResponse = useCallback(
     async (messageText) => {
-      console.log("submitResponse called with:", messageText);
 
       const message = messageText.trim();
       if (!message) {
-        console.log("⚠️ No transcript to submit");
         return;
       }
 
@@ -76,7 +74,6 @@ export const useInterviewLogic = ({
         await speak(aiMessage);
 
         if (aiMessage.includes("INTERVIEW_COMPLETE")) {
-          console.log("✅ Interview complete!");
           setInterviewComplete(true);
           setProcessingAI(false);
           await completeSession(sessionIdRef.current);
@@ -108,7 +105,7 @@ export const useInterviewLogic = ({
 
     try {
       const response = await fetch(
-        "https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update",
+        "http://localhost:8080/api/interview-sessions/verify_update",
         {
           method: "POST",
           headers: {
@@ -268,7 +265,7 @@ Generate a professional evaluation report with sections for:
       setProcessingAI(false);
 
       // Save report
-      await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+      await fetch("http://localhost:8080/api/interview-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -117,14 +117,11 @@ const SystemCheckStep = ({ onComplete, darkMode, isMobile }) => {
     // 4. Internet speed test
     const internetCheck = async () => {
       const startTime = Date.now();
-      console.log("Starting internet speed test...",startTime);
       try {
         // Fetch a small resource from your backend
         // await fetch('https://www.google.com/favicon.ico', { cache: 'no-store' });
         if (!navigator.onLine) {
-  console.log("No internet");
 } else {
-  console.log("Internet available");
 }
 
         const duration = Date.now() - startTime;

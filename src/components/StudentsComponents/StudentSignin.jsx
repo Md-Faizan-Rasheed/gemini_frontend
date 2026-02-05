@@ -27,7 +27,7 @@ const StudentSignin = () => {
 
   /* ===================== AXIOS CONFIG ===================== */
   const api = axios.create({
-    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
+    baseURL: "http://localhost:8080/students",
     withCredentials: true,
   });
 

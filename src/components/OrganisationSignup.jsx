@@ -39,7 +39,7 @@
 //     // Add logic here to send signupInfo to the backend
 
 //     try {
-//       const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/signup";
+//       const url = "http://localhost:8080/auth/signup";
 //       const response = await fetch(url, {
 //         method: "POST",
 //         headers: {
@@ -289,7 +289,7 @@
 //     };
 
 //     try {
-//       const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/signup";
+//       const url = "http://localhost:8080/auth/signup";
 //       const response = await fetch(url, {
 //         method: "POST",
 //         headers: {
@@ -333,7 +333,7 @@
 //     };
 
 //     try {
-//       const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/student-signup";
+//       const url = "http://localhost:8080/auth/student-signup";
 //       const response = await fetch(url, {
 //         method: "POST",
 //         headers: {
@@ -775,7 +775,7 @@
 //     };
 
 //     try {
-//       const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/signup";
+//       const url = "http://localhost:8080/auth/signup";
 //       const response = await fetch(url, {
 //         method: "POST",
 //         headers: {
@@ -1093,7 +1093,7 @@ const OrganisationSignup = () => {
     setIsLoading(true);
 
     try {
-      const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/signup";
+      const url = "http://localhost:8080/auth/signup";
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -1108,7 +1108,6 @@ const OrganisationSignup = () => {
         showToast(message || "Signup successful!", "success");
         setTimeout(() => {
           navigate("/signin");
-          console.log("Navigate to signin");
         }, 1000);
       } else if (error) {
         const details = error?.details[0].message;

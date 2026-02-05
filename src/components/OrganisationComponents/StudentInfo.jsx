@@ -62,7 +62,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://jubilant-fortnight-node-backend.onrender.com/jobs/send-otp",
+        "http://localhost:8080/jobs/send-otp",
         { phoneNumber: formData.phoneNumber }
       );
 
@@ -81,7 +81,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://jubilant-fortnight-node-backend.onrender.com/jobs/verify-otp",
+        "http://localhost:8080/jobs/verify-otp",
         {
           phoneNumber: formData.phoneNumber,
           otp: formData.otp,
@@ -160,7 +160,6 @@ const handleSubmit = async (e) => {
 
   // ✅ Use companyId from URL as fallback
   const finalCompanyId = formData.companyId || companyId;
-  console.log("comapanyId",finalCompanyId)
   if (!finalCompanyId) {
     showToast("Company ID missing. Please check the URL.", "warning");
     return;
@@ -186,7 +185,7 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await axios.post(
-      "https://jubilant-fortnight-node-backend.onrender.com/jobs/save-student-details",
+      "http://localhost:8080/jobs/save-student-details",
       submissionData // ✅ Use this instead of formData
     );
 
@@ -239,7 +238,7 @@ const handleSubmit = async (e) => {
 
   //   try {
   //     const response = await axios.post(
-  //       "https://jubilant-fortnight-node-backend.onrender.com/jobs/save-student-details",
+  //       "http://localhost:8080/jobs/save-student-details",
   //       formData
   //     );
 

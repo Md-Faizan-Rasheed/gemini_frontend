@@ -30,7 +30,6 @@ const ContactUsPage = () => {
     
     // Simulate API call
     setTimeout(() => {
-      console.log('Form submitted:', formData);
       setFormSubmitted(true);
       setIsSubmitting(false);
       

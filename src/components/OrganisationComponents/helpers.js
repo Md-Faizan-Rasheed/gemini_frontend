@@ -1,9 +1,7 @@
-export const API_BASE = "https://jubilant-fortnight-node-backend.onrender.com/api";
+export const API_BASE = "http://localhost:8080/api";
 
 // 🔹 create interview session
 export const createSession = async (studentId,jobId) => {
-  console.log("came to createsession")
-  console.log("Studentid",studentId,"JobId",jobId)
   const res = await fetch(`${API_BASE}/interview-sessions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

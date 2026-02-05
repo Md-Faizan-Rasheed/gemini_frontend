@@ -484,7 +484,6 @@ const BeautifulReportDisplay = ({
   const sections = parseReport(reportData);
 
   // Debug: Log parsed sections
-  console.log('📊 Parsed Report Sections:', sections);
 
   // Check if we have any content
   const hasContent = sections && (
@@ -500,7 +499,6 @@ const BeautifulReportDisplay = ({
 
   // If no parsed content, show raw report
   if (!hasContent && reportData) {
-    console.log('⚠️ No structured content found, displaying raw report');
     return (
       <div className="space-y-6">
         {/* Key Metrics Cards */}

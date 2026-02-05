@@ -226,7 +226,6 @@ const Navbar = () => {
                     {({ isActive }) => (
                       <div
                        onClick={() => {
-                      console.log("Nav clicked");
                       setMenuOpen(false);
                     }}
                         className={`flex items-center justify-between px-4 py-3.5 rounded-xl font-semibold text-[15px] transition-all duration-200 ${

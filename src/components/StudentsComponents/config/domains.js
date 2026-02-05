@@ -11,7 +11,10 @@ import {
   Palette,
   Network,
   Bot,
-  Blocks
+  Blocks,
+  Bug,
+  ClipboardList,
+  BarChart3
 } from "lucide-react";
 
 export const domains = [
@@ -358,6 +361,65 @@ export const domains = [
       { id: "bgp", name: "BGP", category: "advanced" },
       { id: "ospf", name: "OSPF", category: "advanced" },
       { id: "mpls", name: "MPLS", category: "advanced" }
+    ]
+  },
+  {
+    id: "qa-testing",
+    name: "Quality Assurance",
+    icon: Bug,
+    color: "from-rose-400 to-red-500",
+    skills: [
+      { id: "manual-testing", name: "Manual Testing", category: "testing" },
+      { id: "test-case-design", name: "Test Case Design", category: "testing" },
+      { id: "test-plans", name: "Test Plans", category: "testing" },
+      { id: "bug-tracking", name: "Bug Tracking", category: "process" },
+      { id: "jira", name: "Jira", category: "tools" },
+      { id: "selenium-qa", name: "Selenium", category: "automation" },
+      { id: "cypress-qa", name: "Cypress", category: "automation" },
+      { id: "playwright-qa", name: "Playwright", category: "automation" },
+      { id: "api-testing", name: "API Testing", category: "testing" },
+      { id: "postman", name: "Postman", category: "tools" },
+      { id: "performance-testing", name: "Performance Testing", category: "testing" },
+      { id: "jmeter", name: "JMeter", category: "tools" },
+      { id: "testng", name: "TestNG", category: "framework" },
+      { id: "cucumber", name: "Cucumber", category: "bdd" }
+    ]
+  },
+  {
+    id: "product-management",
+    name: "Product Management",
+    icon: ClipboardList,
+    color: "from-amber-400 to-yellow-500",
+    skills: [
+      { id: "product-strategy", name: "Product Strategy", category: "strategy" },
+      { id: "roadmapping", name: "Roadmapping", category: "strategy" },
+      { id: "user-research-pm", name: "User Research", category: "research" },
+      { id: "requirements", name: "Requirements Gathering", category: "process" },
+      { id: "backlog", name: "Backlog Management", category: "process" },
+      { id: "prioritization", name: "Prioritization", category: "process" },
+      { id: "user-stories", name: "User Stories", category: "process" },
+      { id: "agile", name: "Agile Methodologies", category: "process" },
+      { id: "stakeholder", name: "Stakeholder Management", category: "collaboration" },
+      { id: "metrics", name: "Product Metrics", category: "analytics" },
+      { id: "go-to-market", name: "Go-to-Market", category: "strategy" }
+    ]
+  },
+  {
+    id: "data-analytics",
+    name: "Data Analytics",
+    icon: BarChart3,
+    color: "from-indigo-400 to-blue-500",
+    skills: [
+      { id: "sql-analytics", name: "SQL", category: "language" },
+      { id: "excel-analytics", name: "Excel", category: "tools" },
+      { id: "powerbi-analytics", name: "Power BI", category: "bi-tools" },
+      { id: "tableau-analytics", name: "Tableau", category: "bi-tools" },
+      { id: "google-data-studio", name: "Looker Studio", category: "bi-tools" },
+      { id: "dashboards", name: "Dashboarding", category: "analytics" },
+      { id: "data-cleaning", name: "Data Cleaning", category: "analytics" },
+      { id: "kpi-tracking", name: "KPI Tracking", category: "analytics" },
+      { id: "ab-testing-analytics", name: "A/B Testing", category: "experimentation" },
+      { id: "python-analytics", name: "Python", category: "language" }
     ]
   }
 ];

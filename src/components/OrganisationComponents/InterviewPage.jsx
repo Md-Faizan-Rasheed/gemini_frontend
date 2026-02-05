@@ -391,7 +391,7 @@
 
 //   try {
 //     const response = await fetch(
-//       "https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update",
+//       "http://localhost:8080/api/interview-sessions/verify_update",
 //       {
 //         method: "POST",
 //         headers: {
@@ -647,7 +647,7 @@
 
 //       // send once interview ends
 //       try {
-//         const reportSave = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+//         const reportSave = await fetch("http://localhost:8080/api/interview-report", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -1007,9 +1007,7 @@ const InterviewPage = () => {
     const fetchJob = async () => {
       setLoading(true);
       try {
-        console.log("Fetching job with id:", id);
         const token = localStorage.getItem("token");
-        console.log("Using token:", token);
 
         const response = await fetch(
           `https://vecelbdfastapi-o38rr4nb4-faizs-projects-96be4be2.vercel.app/jobs/${id}`,
@@ -1026,7 +1024,6 @@ const InterviewPage = () => {
         }
 
         const result = await response.json();
-        console.log("Job API result:", result);
 
         setData({
           title: result?.title || "",
@@ -1085,7 +1082,6 @@ const InterviewPage = () => {
     });
 
     if (!recognitionRef.current || processingAIRef.current || isListeningRef.current) {
-      console.log("❌ Cannot start listening");
       return;
     }
 
@@ -1097,20 +1093,16 @@ const InterviewPage = () => {
 
     try {
       recognitionRef.current.start();
-      console.log("✅ Recognition started successfully");
     } catch (e) {
-      console.log("⚠️ Recognition already started:", e);
     }
   }, []);
 
   const stopListening = useCallback(() => {
-    console.log("🛑 Stopping listening...");
     clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch (e) {
-        console.log("Stop error:", e);
       }
     }
     setIsListening(false);
@@ -1119,17 +1111,14 @@ const InterviewPage = () => {
   /* ================= SUBMIT ANSWER ================= */
   const submitResponseWithText = useCallback(
     async (messageText) => {
-      console.log("submitResponseWithText called with:", messageText);
 
       if (processingAIRef.current) {
-        console.log("⚠️ Already processing, skipping...");
         return;
       }
 
       const message = messageText.trim();
 
       if (!message) {
-        console.log("⚠️ No transcript to submit");
         setTimeout(() => startListening(), 500);
         return;
       }
@@ -1173,7 +1162,6 @@ const InterviewPage = () => {
         const json = await res.json();
         const aiMessage = json.choices?.[0]?.message?.content;
 
-        console.log("🤖 AI Response:", aiMessage);
 
         if (!aiMessage) {
           throw new Error("No AI response received");
@@ -1191,7 +1179,6 @@ const InterviewPage = () => {
         await speak(aiMessage);
 
         if (aiMessage.includes("INTERVIEW_COMPLETE")) {
-          console.log("✅ Interview complete!");
           setInterviewComplete(true);
           setProcessingAI(false);
 
@@ -1203,7 +1190,6 @@ const InterviewPage = () => {
 
         setProcessingAI(false);
 
-        console.log("🎤 Resuming listening...");
         setTimeout(() => startListening(), 500);
       } catch (err) {
         console.error("❌ Submit response error:", err);
@@ -1231,7 +1217,6 @@ const InterviewPage = () => {
     rec.interimResults = true;
 
     rec.onresult = (event) => {
-      console.log("🎤 Speech result received");
       clearTimeout(silenceTimerRef.current);
 
       let interim = "";
@@ -1251,13 +1236,11 @@ const InterviewPage = () => {
         transcriptRef.current = newTranscript;
         setTranscript(newTranscript);
         setInterimTranscript("");
-        console.log("✅ Final transcript:", newTranscript);
       } else {
         setInterimTranscript(interim);
       }
 
       silenceTimerRef.current = setTimeout(() => {
-        console.log("⏱️ Silence detected, submitting...");
         if (transcriptRef.current.trim()) {
           stopListening();
           submitResponseWithText(transcriptRef.current);
@@ -1266,7 +1249,6 @@ const InterviewPage = () => {
     };
 
     rec.onend = () => {
-      console.log("🔚 Recognition ended");
 
       if (
         isListeningRef.current &&
@@ -1274,11 +1256,9 @@ const InterviewPage = () => {
         interviewStartedRef.current &&
         !interviewCompleteRef.current
       ) {
-        console.log("🔄 Auto-restarting recognition...");
         try {
           rec.start();
         } catch (e) {
-          console.log("⚠️ Recognition restart failed:", e);
         }
       }
     };
@@ -1316,7 +1296,7 @@ const InterviewPage = () => {
     if (!data) return;
 
     try {
-      const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update", {
+      const response = await fetch("http://localhost:8080/api/interview-sessions/verify_update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1410,11 +1390,8 @@ Now begin the interview naturally.`;
     setProcessingAI(true);
 
     try {
-      console.log("🆕 Creating interview session for job:", id);
       const session = await createSession(studentId, id);
-      console.log("sessions", session);
       sessionIdRef.current = session._id;
-      console.log("✅ Session created with ID:", session._id);
 
       const res = await fetch(
         "https://vecelbdfastapi-o38rr4nb4-faizs-projects-96be4be2.vercel.app/api/openai",
@@ -1456,7 +1433,6 @@ Now begin the interview naturally.`;
       await speak(aiMessage);
       setProcessingAI(false);
 
-      console.log("🎯 Starting listening after initial question...");
       setTimeout(() => startListening(), 500);
     } catch (err) {
       console.error("Start interview error:", err);
@@ -1474,7 +1450,6 @@ Now begin the interview naturally.`;
       .map((msg) => `${msg.role === "assistant" ? "Interviewer" : "Candidate"}: ${msg.content}`)
       .join("\n\n");
 
-    console.log("Generating report for conversation:", conversationText);
 
     try {
       const res = await fetch(
@@ -1556,7 +1531,6 @@ Tone:
 
       const json = await res.json();
       const aiContent = json.choices?.[0]?.message?.content;
-      console.log("ai Report content", aiContent);
 
       const { structured, reportText } = extractAIReport(aiContent);
 
@@ -1564,7 +1538,7 @@ Tone:
       setProcessingAI(false);
 
       try {
-        const reportSave = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+        const reportSave = await fetch("http://localhost:8080/api/interview-report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1584,8 +1558,6 @@ Tone:
         const saveResult = await reportSave.json();
 
         if (saveResult.success) {
-          console.log("✅ Interview report saved successfully");
-          console.log("📄 Report ID:", saveResult.reportId);
         } else {
           console.error("❌ Report save failed:", saveResult.message);
         }

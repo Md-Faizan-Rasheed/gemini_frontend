@@ -39,7 +39,7 @@ const Settings = () => {
     const fetchUserId = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+        const response = await fetch('http://localhost:8080/jobs/api/user-id', {
           method: 'POST',
           headers: {
             'authorization': token,
@@ -64,10 +64,8 @@ const Settings = () => {
 
   const fetchUserData = async (userId) => {
     try {
-      const response = await fetch(`https://jubilant-fortnight-node-backend.onrender.com/jobs/api/users/${userId}`);
+      const response = await fetch(`http://localhost:8080/jobs/api/users/${userId}`);
       const data = await response.json();
-      console.log("Data came from the DB", data);
-      console.log("Email in Setting section", data.email);
 
       setFormData({
         company_name: data.company_name || "",
@@ -97,17 +95,15 @@ const Settings = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`https://jubilant-fortnight-node-backend.onrender.com/jobs/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:8080/jobs/api/users/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log("User information updated successfully!");
         toast.success("Organization information updated successfully!");
       } else {
-        console.log("Failed to update user information.");
         toast.error("Failed to update information. Please try again.");
       }
     } catch (error) {
@@ -460,4 +456,5 @@ const FormField = ({ label, required, icon, description, children }) => (
 );
 
 export default Settings;
+
 

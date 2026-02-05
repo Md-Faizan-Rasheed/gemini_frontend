@@ -38,7 +38,7 @@ const StudentSignup = () => {
   };
 
     const api = axios.create({
-    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
+    baseURL: "http://localhost:8080/students",
     withCredentials: true, // ✅ allows JWT cookies
   });
 
@@ -183,11 +183,9 @@ const StudentSignup = () => {
         showToast("Student details saved successfully", "success");
           setSubmitting(false);
 
-        console.log("Student details response:", res.data);
         
         // ✅ Go to home page only now
         const studentId = res.data.student_id || localStorage.getItem("studentId");
-        console.log("Navigating to student home page with ID:", studentId);
   
         navigate(`/StudentHomePage/${studentId}`);
       } else {

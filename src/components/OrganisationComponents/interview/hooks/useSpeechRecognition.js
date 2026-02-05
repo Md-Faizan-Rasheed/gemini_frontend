@@ -38,10 +38,8 @@ export const useSpeechRecognition = ({
   }, [interviewComplete]);
 
   const startListening = useCallback(() => {
-    console.log("👂 Attempting to start listening...");
 
     if (!recognitionRef.current || processingAIRef.current || isListeningRef.current) {
-      console.log("❌ Cannot start listening");
       return;
     }
 
@@ -53,20 +51,16 @@ export const useSpeechRecognition = ({
 
     try {
       recognitionRef.current.start();
-      console.log("✅ Recognition started successfully");
     } catch (e) {
-      console.log("⚠️ Recognition already started:", e);
     }
   }, []);
 
   const stopListening = useCallback(() => {
-    console.log("🛑 Stopping listening...");
     clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch (e) {
-        console.log("Stop error:", e);
       }
     }
     setIsListening(false);
@@ -118,7 +112,6 @@ export const useSpeechRecognition = ({
       }
 
       silenceTimerRef.current = setTimeout(() => {
-        console.log("⏱️ Silence detected, submitting...");
         if (transcriptRef.current.trim()) {
           handleSubmitTranscript();
         }
@@ -126,7 +119,6 @@ export const useSpeechRecognition = ({
     };
 
     rec.onend = () => {
-      console.log("🔚 Recognition ended");
 
       if (
         isListeningRef.current &&
@@ -134,11 +126,9 @@ export const useSpeechRecognition = ({
         interviewStartedRef.current &&
         !interviewCompleteRef.current
       ) {
-        console.log("🔄 Auto-restarting recognition...");
         try {
           rec.start();
         } catch (e) {
-          console.log("⚠️ Recognition restart failed:", e);
         }
       }
     };

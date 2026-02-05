@@ -2,7 +2,6 @@ import openai from "./openaiClient";
 import { generationConfig } from "../../constants/options.jsx";
 
 export async function chatSessionSecond(prompt) {
-  console.log("prompt in chat session",prompt)
   const response = await openai.chat.completions.create({
     model: "gpt-4.1-mini",
     response_format: { type: "json_object" },
@@ -19,7 +18,7 @@ export async function chatSessionSecond(prompt) {
     ],
     ...generationConfig,
   });
-   console.log("Response",response)
 
   return response.choices[0].message.content;
 }
+
