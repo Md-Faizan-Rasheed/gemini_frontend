@@ -16,7 +16,7 @@ const StudentSignin = () => {
 
   /* ===================== STATE ===================== */
   const [formData, setFormData] = useState({
-    phoneNumber: "",
+    email: "",
     otp: "",
   });
 
@@ -42,15 +42,15 @@ const StudentSignin = () => {
 
   /* ===================== SEND OTP ===================== */
   const handleSendOtp = async () => {
-    if (formData.phoneNumber.length !== 10) {
-      showToast("Enter valid 10 digit phone number");
+    if (!formData.email) {
+      showToast("Enter a valid email address");
       return;
     }
 
     setLoading(true);
     try {
       const checkResponse = await api.post("/check-student", {
-        phoneNumber: formData.phoneNumber,
+        email: formData.email,
       });
 
       if (!checkResponse.data.exists) {
@@ -63,7 +63,7 @@ const StudentSignin = () => {
       setStudentId(StudentId);
 
       const response = await api.post("/send-otp", {
-        phoneNumber: formData.phoneNumber,
+        email: formData.email,
       });
 
       if (response.data.success) {
@@ -93,7 +93,7 @@ const StudentSignin = () => {
     setLoading(true);
     try {
       const response = await api.post("/verify-otp", {
-        phoneNumber: formData.phoneNumber,
+        email: formData.email,
         otp: formData.otp,
       });
 
@@ -103,7 +103,7 @@ const StudentSignin = () => {
         const studentIdFromBackend = response.data.studentId || studentId;
         localStorage.setItem("studentId", studentIdFromBackend);
 
-        setFormData({ phoneNumber: "", otp: "" });
+        setFormData({ email: "", otp: "" });
         setShowOtpInput(false);
         setOtpSent(false);
 
@@ -148,20 +148,19 @@ const StudentSignin = () => {
 
           {/* Form */}
           <form className="px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10 space-y-5 sm:space-y-6" onSubmit={handleSignin}>
-            {/* Phone */}
+            {/* Email */}
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                Phone Number *
+                Email Address *
               </label>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleInputChange}
                   className="w-full sm:flex-1 px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg sm:rounded-xl transition-all outline-none text-sm sm:text-base"
-                  placeholder="Enter phone number"
-                  maxLength="10"
+                  placeholder="your.email@example.com"
                   required
                   disabled={showOtpInput}
                 />
