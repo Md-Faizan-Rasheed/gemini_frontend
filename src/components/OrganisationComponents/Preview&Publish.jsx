@@ -46,7 +46,7 @@
 //     console.log('Token:', token);
 
 //     try {
-//       const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+//       const response = await fetch('http://localhost:8080/jobs/api/user-id', {
 
 //         method: 'POST',
 //         headers: {
@@ -105,7 +105,7 @@
 //     console.log('Job Data:', jobData);
 
 //     try {
-//       const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/add', {
+//       const response = await fetch('http://localhost:8080/jobs/add', {
 //         method: 'POST',
 //         headers: {
 //           'Content-Type': 'application/json',
@@ -379,7 +379,7 @@ const PreviewAndPublish = () => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+      const response = await fetch('http://localhost:8080/jobs/api/user-id', {
         method: 'POST',
         headers: {
           authorization: `${localStorage.getItem('token')}`,
@@ -434,7 +434,7 @@ const PreviewAndPublish = () => {
 
 
     try {
-      const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/add', {
+      const response = await fetch('http://localhost:8080/jobs/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

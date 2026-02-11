@@ -391,7 +391,7 @@
 
 //   try {
 //     const response = await fetch(
-//       "https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update",
+//       "http://localhost:8080/api/interview-sessions/verify_update",
 //       {
 //         method: "POST",
 //         headers: {
@@ -647,7 +647,7 @@
 
 //       // send once interview ends
 //       try {
-//         const reportSave = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+//         const reportSave = await fetch("http://localhost:8080/api/interview-report", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({
@@ -1296,7 +1296,7 @@ const InterviewPage = () => {
     if (!data) return;
 
     try {
-      const response = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update", {
+      const response = await fetch("http://localhost:8080/api/interview-sessions/verify_update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1538,7 +1538,7 @@ Tone:
       setProcessingAI(false);
 
       try {
-        const reportSave = await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+        const reportSave = await fetch("http://localhost:8080/api/interview-report", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

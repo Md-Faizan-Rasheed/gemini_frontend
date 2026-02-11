@@ -38,7 +38,7 @@ const StudentSignup = () => {
   };
 
     const api = axios.create({
-    baseURL: "https://jubilant-fortnight-node-backend.onrender.com/students",
+    baseURL: "http://localhost:8080/students",
     withCredentials: true, // ✅ allows JWT cookies
   });
 
@@ -86,15 +86,15 @@ const StudentSignup = () => {
   // };
 
   
-    const handleVerifyPhone = async () => {
-    if (!formData.phoneNumber) {
-      showToast("Please enter phone number first.", "warning");
+    const handleVerifyEmail = async () => {
+    if (!formData.email) {
+      showToast("Please enter email first.", "warning");
       return;
     }
     setLoading(true);
     try {
       const res = await api.post("/send-otp", {
-        phoneNumber: formData.phoneNumber,
+        email: formData.email,
       });
 
       if (res.data.success) {
@@ -265,55 +265,31 @@ const StudentSignup = () => {
               </div>
             </div>
 
-            {/* Email */}
+            {/* Email Verification */}
             <div>
               <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                 Email Address <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
-                  placeholder="your.email@example.com"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Phone Number */}
-            <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-                Phone Number <span className="text-red-500">*</span>
               </label>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <div className="flex-1 relative">
                   <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                     <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
+                    type="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
-                    placeholder="Enter phone number"
-                    maxLength="10"
+                    placeholder="your.email@example.com"
                     required
                   />
                 </div>
                 <button
                   type="button"
-                  onClick={handleVerifyPhone}
+                  onClick={handleVerifyEmail}
                   disabled={loading}
                   className="px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -328,7 +304,7 @@ const StudentSignup = () => {
                   ) : otpSent ? (
                     "Resend OTP"
                   ) : (
-                    "Verify"
+                    "Verify Email"
                   )}
                 </button>
               </div>
@@ -399,6 +375,30 @@ const StudentSignup = () => {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </div>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm sm:text-base text-gray-900"
+                  placeholder="Enter phone number"
+                  maxLength="10"
+                  required
+                />
+              </div>
+            </div>
 
             {/* Aadhar Number */}
             <div>

@@ -19,7 +19,7 @@ const JobDetails = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`https://jubilant-fortnight-node-backend.onrender.com/jobs/${id}`);
+        const response = await axios.get(`http://localhost:8080/jobs/${id}`);
         setJob(response.data);
       } catch (error) {
         console.error("Error fetching job details:", error);

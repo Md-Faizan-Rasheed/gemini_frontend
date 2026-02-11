@@ -105,7 +105,7 @@ export const useInterviewLogic = ({
 
     try {
       const response = await fetch(
-        "https://jubilant-fortnight-node-backend.onrender.com/api/interview-sessions/verify_update",
+        "http://localhost:8080/api/interview-sessions/verify_update",
         {
           method: "POST",
           headers: {
@@ -265,7 +265,7 @@ Generate a professional evaluation report with sections for:
       setProcessingAI(false);
 
       // Save report
-      await fetch("https://jubilant-fortnight-node-backend.onrender.com/api/interview-report", {
+      await fetch("http://localhost:8080/api/interview-report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

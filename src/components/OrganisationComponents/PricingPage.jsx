@@ -17,7 +17,7 @@ const PricingPage = () => {
       console.log("Fetching user ID with token:", localStorage.getItem('token'));
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id', {
+            const response = await fetch('http://localhost:8080/jobs/api/user-id', {
                 method: 'POST',
                 headers: {
                     'authorization': `${localStorage.getItem('token')}`,
@@ -58,7 +58,7 @@ const PricingPage = () => {
       }
 
       const response = await fetch(
-        'https://jubilant-fortnight-node-backend.onrender.com/api/billing/activate-free-plan',
+        'http://localhost:8080/api/billing/activate-free-plan',
         {
           method: 'POST',
           headers: {
@@ -110,7 +110,7 @@ const PricingPage = () => {
 
       // Create order
       const res = await fetch(
-        'https://jubilant-fortnight-node-backend.onrender.com/api/billing/create-order',
+        'http://localhost:8080/api/billing/create-order',
         {
           method: 'POST',
           headers: {
@@ -157,7 +157,7 @@ const PricingPage = () => {
           try {
             // Verify payment with backend
             const verifyRes = await fetch(
-              'https://jubilant-fortnight-node-backend.onrender.com/api/billing/verify',
+              'http://localhost:8080/api/billing/verify',
               {
                 method: 'POST',
                 headers: {

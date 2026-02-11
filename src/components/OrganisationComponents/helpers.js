@@ -1,4 +1,4 @@
-export const API_BASE = "https://jubilant-fortnight-node-backend.onrender.com/api";
+export const API_BASE = "http://localhost:8080/api";
 
 // 🔹 create interview session
 export const createSession = async (studentId,jobId) => {

@@ -161,7 +161,7 @@ ${selectedReport.report}
   const fetchUserId = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("https://jubilant-fortnight-node-backend.onrender.com/jobs/api/user-id", {
+    const res = await fetch("http://localhost:8080/jobs/api/user-id", {
       method: "POST",
       headers: {
         authorization: token,
@@ -180,7 +180,7 @@ ${selectedReport.report}
       if (!companyId) return;
 
       const res = await fetch(
-        `https://jubilant-fortnight-node-backend.onrender.com/api/by-company/${companyId}`,
+        `http://localhost:8080/api/by-company/${companyId}`,
         {
           headers: {
             authorization: localStorage.getItem("token")
