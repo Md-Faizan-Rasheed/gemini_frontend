@@ -42,7 +42,7 @@ export const DetailedStudentsView = ({ darkMode, searchTerm }) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch('http://localhost:8080/admin/students', {
+        const response = await fetch('https://jubilant-fortnight-node-backend.onrender.com/admin/students', {
           headers: {    
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -67,7 +67,7 @@ export const DetailedStudentsView = ({ darkMode, searchTerm }) => {
     if (!window.confirm('Are you sure?')) return;
 
     try {
-      await fetch(`http://localhost:8080/admin/${studentId}`, {
+      await fetch(`https://jubilant-fortnight-node-backend.onrender.com/admin/${studentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -334,7 +334,7 @@ export const DetailedInterviewsView = ({ darkMode, searchTerm }) => {
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
-        const res = await fetch('http://localhost:8080/admin/interviews');
+        const res = await fetch('https://jubilant-fortnight-node-backend.onrender.com/admin/interviews');
         if (!res.ok) throw new Error('Failed to fetch interviews');
         const data = await res.json();
         setInterviews(Array.isArray(data) ? data : []);

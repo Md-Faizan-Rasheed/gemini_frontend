@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Create an axios instance with a base URL
-const API = axios.create({ baseURL:'http://localhost:8080/api' });
+const API = axios.create({ baseURL:'https://jubilant-fortnight-node-backend.onrender.com/api' });
 
 // Add an interceptor to attach the auth token to every request
 API.interceptors.request.use((req) => {

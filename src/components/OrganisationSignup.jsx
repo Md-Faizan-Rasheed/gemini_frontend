@@ -55,7 +55,7 @@ const OrganisationSignup = () => {
     setIsLoading(true);
 
     try {
-      const url = "http://localhost:8080/auth/signup";
+      const url = "https://jubilant-fortnight-node-backend.onrender.com/auth/signup";
       const response = await fetch(url, {
         method: "POST",
         headers: {
